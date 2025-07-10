@@ -1,5 +1,6 @@
 "use client";
 import api from "@/lib/axios";
+import { createClient } from "@/lib/supabase/client";
 import { User } from "@/types/user";
 import axios, { Axios, AxiosError } from "axios";
 import {
@@ -17,7 +18,7 @@ type AuthContextType = {
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  refreshUser: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -26,50 +27,75 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
 
-  const refreshUser = useCallback(async () => {
+  const getSession = useCallback(async () => {
     setLoading(true);
     setError(null);
-    try {
-      const { data } = await api.get("/api/user");
-      setUser(data);
-      console.log("response fetch user : ", data);
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        if (err.response?.status === 401) {
-          setUser(null);
-        } else {
-          setError(
-            err.response?.data?.message || "Failed to fetch user information"
-          );
+
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
+    if (error) {
+      console.error("Failed to get user : ", error);
+      setError(error.message);
+      setUser(null);
+      return;
+    }
+
+    if (session?.user) {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+
+      setUser({
+        id: session.user.id,
+        email: session.user.email ?? "",
+        name: data.name,
+        role: data.role,
+      });
+    } else {
+      setUser(null);
+    }
+
+    // setUser(data)
+    console.log("data di auth provider : ", session?.user);
+    setLoading(false);
+  }, []);
+
+  const login = useCallback(
+    async (email: string, password: string) => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          setError(error.message);
+          return;
         }
-      } else {
-        setError("An unexpected error occured");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await api.get("/sanctum/csrf-cookie");
-      const response = await api.post("/auth/login", { email, password });
-      await refreshUser();
-      // return response;
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        setError(error.response?.data?.message || "Invalid email or password");
-      } else {
-        setError("Loading failed. Please try again.");
+        if (data?.user) {
+          console.log("user login auth provider : ", data);
+        }
+        setLoading(false);
+      } catch (err) {
+        console.error("Login error: ", err);
+        setError("Login failed. Please try again.");
+      } finally {
+        setLoading(false);
       }
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [supabase]
+  );
 
   const logout = useCallback(async () => {
     setLoading(true);
@@ -87,13 +113,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  useEffect(() => {
-    refreshUser();
-  }, [refreshUser]);
+  const resetPassword = useCallback(
+    async (email: string) => {
+      try {
+        setLoading(true);
+        setError(null);
+      } catch (err) {
+        console.error("Password reset error: ", err);
+        setError("Password reset failed. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [supabase]
+  );
 
+  useEffect(() => {
+    getSession();
+  }, [getSession, supabase]);
+
+  // refreshUser,
   return (
     <AuthContext.Provider
-      value={{ user, loading, login, logout, refreshUser, error }}
+      value={{ user, loading, login, logout, error, resetPassword }}
     >
       {children}
     </AuthContext.Provider>
