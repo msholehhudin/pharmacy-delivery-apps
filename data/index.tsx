@@ -49,7 +49,7 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
       icon: Settings,
     },
   ],
-  pharmacy_admin: [
+  pharmacy_staff: [
     {
       title: "Dashboard",
       url: "/",
