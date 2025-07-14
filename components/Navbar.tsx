@@ -15,9 +15,12 @@ import {
 import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
+import { useAuth } from "@/context/AuthProvider";
 
 const Navbar = () => {
   const { setTheme } = useTheme();
+  const { logout } = useAuth();
+
   return (
     <nav className="flex items-center justify-between">
       {/* LEFT */}
@@ -74,7 +77,11 @@ const Navbar = () => {
               <Settings className="h-[1.2rem] w-[1.2rem] mr-2" />
               Settings
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" className="cursor-pointer">
+            <DropdownMenuItem
+              variant="destructive"
+              className="cursor-pointer"
+              onClick={logout}
+            >
               <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
               Logout
             </DropdownMenuItem>
