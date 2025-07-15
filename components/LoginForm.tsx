@@ -61,8 +61,6 @@ export const LoginForm = ({
     } catch (err) {
       console.error("Error Login : ", err);
       setError("Invalid Credentials. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 

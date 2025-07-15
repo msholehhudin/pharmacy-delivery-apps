@@ -46,25 +46,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     if (session?.user) {
-      const { data, error } = await supabase
+      const { data: userData, error: userError } = await supabase
         .from("users")
         .select("*")
         .eq("id", session.user.id)
         .single();
 
-      setUser({
-        id: session.user.id,
-        email: session.user.email ?? "",
-        name: data.name,
-        role: data.role,
-      });
+      if (userError) {
+        console.error("Failed to fetch public.users record.", userError);
+        setError(userError.message);
+        return;
+      }
+
+      if (userData) {
+        setUser({
+          id: session.user.id,
+          email: session.user.email ?? "",
+          name: userData.name ?? "",
+          role: userData.role ?? "",
+        });
+        console.log("data di session  : ", userData);
+      }
     } else {
       setUser(null);
     }
-
-    // setUser(data)
-    console.log("data di auth provider : ", session?.user);
-    setLoading(false);
   }, []);
 
   const login = useCallback(
@@ -84,7 +89,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         if (data?.user) {
-          console.log("user login auth provider : ", data);
+          console.log("user di login function  : ", data);
+          await getSession();
         }
         setLoading(false);
       } catch (err) {
@@ -100,14 +106,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = useCallback(async () => {
     setLoading(true);
     try {
-      await api.post("/logout");
-      setUser(null);
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        setError(err.response?.data?.message || "Failed to logout properly.");
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        setError(error.message);
       } else {
-        setError("Logout failed. Please try again.");
+        setUser(null);
       }
+    } catch (err) {
+      setError("Logout failed. Please try again.");
+      console.error("Unexpected logout error: ", err);
     } finally {
       setLoading(false);
     }
