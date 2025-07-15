@@ -70,10 +70,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } else {
       setUser(null);
     }
-
-    // setUser(data)
-    console.log("data di session function : ", session?.user);
-    setLoading(false);
   }, []);
 
   const login = useCallback(
