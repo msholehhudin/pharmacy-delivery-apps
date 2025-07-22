@@ -1,7 +1,7 @@
+
 import { createServer } from "@/lib/supabase/server";
 
-
-export const getTransactions = async() =>{
+export const getServerTransactions = async() =>{
     try{
         const supabase = await createServer()
 
