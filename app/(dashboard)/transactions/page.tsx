@@ -1,22 +1,10 @@
-import React from "react";
-import { DataTable } from "./data-table";
-import { columns } from "./columns";
-import { transactions } from "@/data";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { getTransactions } from "@/lib/api/transactions/queries";
+import TransactionView from "./TransactionView";
 
-const Transaction = () => {
-  return (
-    <div className="container mx-auto py-10">
-      <div className="py-4">
-        <Button className="cursor-pointer">
-          <PlusCircle />
-          Add New Transaction
-        </Button>
-      </div>
-      <DataTable columns={columns} data={transactions} />
-    </div>
-  );
+const TransactionPage = async () => {
+  const initialData = await getTransactions();
+  // console.log("here is a initial data : ", initialData);
+  return <TransactionView initialData={initialData} />;
 };
 
-export default Transaction;
+export default TransactionPage;

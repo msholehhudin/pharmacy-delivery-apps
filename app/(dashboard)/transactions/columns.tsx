@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { formatDateTime } from "@/utils/helper";
 
 // const DragHandle = () => {
 //   const {attributes, listeners} = useSortable
@@ -44,20 +45,21 @@ export const columns: ColumnDef<Transaction>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "recipient_name",
-    header: "Customer Name",
+    accessorKey: "patient_name",
+    header: "Patient Name",
   },
   {
-    accessorKey: "recipient_address",
-    header: "Address",
-  },
-  {
-    accessorKey: "recipient_phone",
+    accessorKey: "patient_phone",
     header: "Phone Number",
   },
   {
-    accessorKey: "delivery_date",
+    accessorKey: "patient_address",
+    header: "Address",
+  },
+  {
+    accessorKey: "created_at",
     header: "Delivery Date",
+    cell: ({ row }) => <span>{formatDateTime(row.original.created_at)}</span>,
   },
   {
     accessorKey: "courier_id",
