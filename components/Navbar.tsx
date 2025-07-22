@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Moon, Settings, Sun, User } from "lucide-react";
+import { Bell, LogOut, Moon, Settings, Sun, User } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -27,7 +27,10 @@ const Navbar = () => {
       <SidebarTrigger className="cursor-pointer" />
       {/* RIGHT */}
       <div className="flex items-center gap-4">
-        <Link href={"/"}>Dashboard</Link>
+        {/* <Link href={"/"}>Dashboard</Link> */}
+        <div className="p-2 rounded-sm hover:cursor-pointer dark:hover:bg-slate-900">
+          <Bell />
+        </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
