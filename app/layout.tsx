@@ -39,7 +39,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <Providers>{children}</Providers>
+            <Providers>
+              <ClientLayout>{children}</ClientLayout>
+            </Providers>
           </AuthProvider>
         </ThemeProvider>
       </body>

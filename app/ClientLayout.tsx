@@ -1,11 +1,19 @@
 "use client";
 
-import { AuthProvider } from "@/context/AuthProvider";
+import FullScreenLoader from "@/components/ui/FullScreenLoader";
+import { useAuth } from "@/context/AuthProvider";
 
 export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AuthProvider>{children}</AuthProvider>;
+  const { loadingLogout } = useAuth();
+  console.log("ini set Loading useAuth : ", loadingLogout);
+  return (
+    <>
+      {loadingLogout && <FullScreenLoader />}
+      {children}
+    </>
+  );
 }
