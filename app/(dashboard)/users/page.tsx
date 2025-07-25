@@ -5,10 +5,6 @@ import React from "react";
 import UserManagement from "./users";
 
 const Users = () => {
-  const { logout } = useAuth();
-  const handleLogout = async () => {
-    await logout();
-  };
   return (
     <>
       <UserManagement />
