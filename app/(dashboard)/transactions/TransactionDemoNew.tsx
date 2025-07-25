@@ -1,3 +1,11 @@
+import React from "react";
+
+const TransactionDemoNew = () => {
+  return <div>TransactionDemoNew</div>;
+};
+
+export default TransactionDemoNew;
+
 // "use client";
 
 // import { useState } from "react";
