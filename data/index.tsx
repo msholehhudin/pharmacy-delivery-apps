@@ -29,14 +29,9 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
       icon: ArrowRightLeft,
     },
     {
-      title: "Pharmacy Staff",
-      url: "/pharmacys",
+      title: "User Management",
+      url: "/users",
       icon: User,
-    },
-    {
-      title: "Couriers",
-      url: "/couriers",
-      icon: Truck,
     },
     {
       title: "Reports",
