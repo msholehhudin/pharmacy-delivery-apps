@@ -25,8 +25,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import { createTransaction } from "@/lib/api/transactions/actions";
+import { useRouter } from "next/navigation";
 
 const supabase = createClient();
+// const router = useRouter();
 
 const courier = [
   { id: "1", name: "Courier 1" },
@@ -49,9 +53,9 @@ const formSchema = z.object({
   paymentMethod: z.enum(["cash", "transfer"], {
     error: "Payment method is required.",
   }),
-  status: z.enum(["pending", "on_delivery", "completed"], {
-    error: "Status is required",
-  }),
+  // status: z.enum(["pending", "on_delivery", "completed"], {
+  //   error: "Status is required",
+  // }),
   notes: z.string().optional(),
 });
 
@@ -60,26 +64,42 @@ export type TransactionFormValues = z.infer<typeof formSchema>;
 const handleSubmit = async (values: TransactionFormValues) => {
   console.log("Submit value : ", values);
 
-  const { data, error } = await supabase
-    .from("transactions")
-    .insert({
-      patient_name: values.patientName,
-      patient_address: values.patientAddress,
-      patient_phone: values.patientPhone,
-      courier_id: values.courier,
-      prescription_details: values.prescriptionDetails,
-      total_amount: values.totalAmount,
-      payment_method: values.paymentMethod,
-      status: values.status,
-      notes: values.notes || null,
-    })
-    .select("*");
+  try {
+    const newTransaction = await createTransaction(values);
 
-  if (error) {
-    console.error("Failed to create transaction : ", error);
-  } else {
-    console.log("Transaction created. ", data);
+    toast("Success !", {
+      description: "Transaction created successfully !",
+    });
+    // router.refresh();
+  } catch (error) {
+    toast("Error", {
+      description: `${error}`,
+    });
+    console.error("Error inserting : ", error);
   }
+
+  // return (...)
+
+  // const { data, error } = await supabase
+  //   .from("transactions")
+  //   .insert({
+  //     patient_name: values.patientName,
+  //     patient_address: values.patientAddress,
+  //     patient_phone: values.patientPhone,
+  //     courier_id: values.courier,
+  //     prescription_details: values.prescriptionDetails,
+  //     total_amount: values.totalAmount,
+  //     payment_method: values.paymentMethod,
+  //     status: values.status,
+  //     notes: values.notes || null,
+  //   })
+  //   .select("*");
+
+  // if (error) {
+  //   console.error("Failed to create transaction : ", error);
+  // } else {
+  //   console.log("Transaction created. ", data);
+  // }
 };
 
 const TransactionForm = () => {
@@ -219,7 +239,7 @@ const TransactionForm = () => {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="status"
           render={({ field }) => (
@@ -243,7 +263,7 @@ const TransactionForm = () => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="notes"
