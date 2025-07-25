@@ -3,6 +3,7 @@ import api from "@/lib/axios";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@/types/user";
 import axios, { Axios, AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   ReactNode,
@@ -19,6 +20,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  loadingLogout: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -28,6 +30,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
+  const [loadingLogout, setLogoutLoading] = useState(false);
+
+  const router = useRouter();
 
   const getSession = useCallback(async () => {
     setLoading(true);
@@ -104,19 +109,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const logout = useCallback(async () => {
-    setLoading(true);
+    setLogoutLoading(true);
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        setError(error.message);
-      } else {
-        setUser(null);
-      }
+      await supabase.auth.signOut();
+      await new Promise((res) => setTimeout(res, 1000));
+      // setUser(null);
+      router.refresh();
     } catch (err) {
       setError("Logout failed. Please try again.");
       console.error("Unexpected logout error: ", err);
     } finally {
-      setLoading(false);
+      setLogoutLoading(false);
     }
   }, []);
 
@@ -142,7 +145,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // refreshUser,
   return (
     <AuthContext.Provider
-      value={{ user, loading, login, logout, error, resetPassword }}
+      value={{
+        user,
+        loading,
+        login,
+        logout,
+        error,
+        resetPassword,
+        loadingLogout,
+      }}
     >
       {children}
     </AuthContext.Provider>
