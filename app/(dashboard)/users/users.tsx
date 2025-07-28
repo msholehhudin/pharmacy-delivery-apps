@@ -220,58 +220,6 @@ export default function UserManagement() {
 
   return (
     <div className="min-h-screen ">
-      {/* Sidebar */}
-      {/* <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg">
-        <div className="flex h-16 items-center px-6 border-b">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Users className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-gray-900">CRM Pro</span>
-          </div>
-        </div>
-
-        <nav className="mt-6 px-3">
-          <div className="space-y-1">
-            <a
-              href="#"
-              className="bg-blue-50 text-blue-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-            >
-              <Users className="text-blue-500 mr-3 h-5 w-5" />
-              Users
-            </a>
-            <a
-              href="#"
-              className="text-gray-700 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-            >
-              <BarChart3 className="text-gray-400 mr-3 h-5 w-5" />
-              Analytics
-            </a>
-            <a
-              href="#"
-              className="text-gray-700 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-            >
-              <Mail className="text-gray-400 mr-3 h-5 w-5" />
-              Messages
-            </a>
-            <a
-              href="#"
-              className="text-gray-700 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-            >
-              <Calendar className="text-gray-400 mr-3 h-5 w-5" />
-              Calendar
-            </a>
-            <a
-              href="#"
-              className="text-gray-700 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-            >
-              <Settings className="text-gray-400 mr-3 h-5 w-5" />
-              Settings
-            </a>
-          </div>
-        </nav>
-      </div> */}
-
       {/* Main Content */}
       <div className="">
         <div className="px-8 py-6">
@@ -348,15 +296,15 @@ export default function UserManagement() {
           </div>
 
           {/* Actions Bar */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
+          <div className="flex sm:items-center sm:justify-between sm:flex-row gap-4 flex-col mb-6">
+            <div className="flex items-center space-x-4 w-full sm:w-auto">
+              <div className="relative w-full sm:w-80">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Search users..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 w-80"
+                  className="pl-10 w-full"
                 />
               </div>
             </div>

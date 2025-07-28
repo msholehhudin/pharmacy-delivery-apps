@@ -356,37 +356,6 @@ export default function TransactionDemo() {
 
   return (
     <div className="min-h-screen ">
-      {/* Sidebar - Same as user management */}
-      {/* <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg">
-        <div className="flex h-16 items-center px-6 border-b">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-gray-900">CRM Pro</span>
-          </div>
-        </div>
-
-        <nav className="mt-6 px-3">
-          <div className="space-y-1">
-            <a
-              href="#"
-              className="text-gray-700 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-            >
-              <DollarSign className="text-gray-400 mr-3 h-5 w-5" />
-              Users
-            </a>
-            <a
-              href="#"
-              className="bg-blue-50 text-blue-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-            >
-              <CreditCard className="text-blue-500 mr-3 h-5 w-5" />
-              Transactions
-            </a>
-          </div>
-        </nav>
-      </div> */}
-
       {/* Main Content */}
       {/* <div > */}
       <div className="px-8 py-6">
@@ -466,8 +435,8 @@ export default function TransactionDemo() {
         </div>
 
         {/* Enhanced Filters Bar */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+          <div className="sm:flex sm:items-center sm:flex-row hidden gap-4 space-x-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
