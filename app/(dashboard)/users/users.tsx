@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Plus,
   Search,
@@ -56,6 +56,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/context/AuthProvider";
+import { formatDateTime } from "@/utils/helper";
+import axios from "axios";
+import Toast, { ToastProps } from "@/components/ui/toast";
 
 interface User {
   id: string;
@@ -65,59 +70,14 @@ interface User {
   role: string;
   status: "active" | "inactive";
   avatar: string;
-  joinDate: string;
-  lastActive: string;
+  join_date: string;
+  last_sign_in: string;
 }
 
-const initialUsers: User[] = [
-  {
-    id: "1",
-    name: "Bos Nawi",
-    email: "bos.nawi@example.com",
-    phone: "+62852 111 222 ",
-    role: "Head of Pharmacy",
-    status: "active",
-    avatar: "/placeholder.svg?height=40&width=40",
-    joinDate: "2024-01-15",
-    lastActive: "2 hours ago",
-  },
-  {
-    id: "2",
-    name: "Helos",
-    email: "helos@example.com",
-    phone: "+62852 222 111 ",
-    role: "Courier",
-    status: "active",
-    avatar: "/placeholder.svg?height=40&width=40",
-    joinDate: "2024-02-20",
-    lastActive: "1 day ago",
-  },
-  {
-    id: "3",
-    name: "Bojes",
-    email: "bojes@example.com",
-    phone: "+62852 112 221 ",
-    role: "Pharmacy Staff",
-    status: "inactive",
-    avatar: "/placeholder.svg?height=40&width=40",
-    joinDate: "2024-03-10",
-    lastActive: "1 week ago",
-  },
-  {
-    id: "4",
-    name: "Paijo",
-    email: "paijo@example.com",
-    phone: "+62852 122 211 ",
-    role: "Pharmacy Staff",
-    status: "active",
-    avatar: "/placeholder.svg?height=40&width=40",
-    joinDate: "2024-01-25",
-    lastActive: "30 minutes ago",
-  },
-];
-
 export default function UserManagement() {
-  const [users, setUsers] = useState<User[]>(initialUsers);
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState<ToastProps | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -131,6 +91,23 @@ export default function UserManagement() {
     status: "active" as "active" | "inactive",
   });
 
+  const supabase = createClient();
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchUsers = async () => {
+      const { data, error } = await supabase.from("users").select("*");
+
+      console.log("ini user di user page : ", data);
+
+      if (error) console.error(error);
+      else setUsers(data || []);
+    };
+
+    fetchUsers();
+  }, [user]);
+
   const filteredUsers = users.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -138,21 +115,54 @@ export default function UserManagement() {
       user.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleAddUser = () => {
-    const newUser: User = {
-      id: Date.now().toString(),
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      role: formData.role,
-      status: formData.status,
-      avatar: "/placeholder.svg?height=40&width=40",
-      joinDate: new Date().toISOString().split("T")[0],
-      lastActive: "Just now",
-    };
-    setUsers([...users, newUser]);
-    setIsAddDialogOpen(false);
-    resetForm();
+  const handleAddUser = async () => {
+    setIsLoading(true);
+
+    try {
+      const res = await fetch("/api/users/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: "mediXpress!",
+        }),
+      });
+
+      const data = await res.json();
+
+      const newUser: User = {
+        id: data.user.id,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        role: formData.role,
+        status: formData.status,
+        avatar: "/placeholder.svg?height=40&width=40",
+        join_date: new Date().toISOString().split("T")[0],
+        last_sign_in: "",
+      };
+
+      console.log("User : ", data);
+
+      const { data: userData, error } = await supabase
+        .from("users")
+        .insert([newUser])
+        .select();
+      // setUsers([...users, newUser]);
+
+      if (error) throw error;
+
+      console.log("ini data setelah insert : ", userData);
+
+      setIsAddDialogOpen(false);
+      resetForm();
+      showToast("User created successfully!", "success");
+    } catch (error) {
+      // console.error("Error creating user : ", err);
+      showToast(`Failed to created user: ${error}`, "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleEditUser = () => {
@@ -218,8 +228,21 @@ export default function UserManagement() {
     }
   };
 
+  const showToast = (message: string, type: string) => {
+    setToast({ message, type });
+  };
+
   return (
     <div className="min-h-screen ">
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       {/* Main Content */}
       <div className="">
         <div className="px-8 py-6">
@@ -310,7 +333,7 @@ export default function UserManagement() {
             </div>
 
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
+              <DialogTrigger asChild className="hover:cursor-pointer">
                 <Button onClick={() => resetForm()}>
                   <Plus className="mr-2 h-4 w-4" />
                   Add User
@@ -379,6 +402,9 @@ export default function UserManagement() {
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="pharmacy_apoteker">
+                          Pharmacy Apoteker
+                        </SelectItem>
                         <SelectItem value="pharmacy_staff">
                           Pharmacy Staff
                         </SelectItem>
@@ -407,7 +433,11 @@ export default function UserManagement() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit" onClick={handleAddUser}>
+                  <Button
+                    type="submit"
+                    onClick={handleAddUser}
+                    className="hover:cursor-pointer"
+                  >
                     Add User
                   </Button>
                 </DialogFooter>
@@ -432,7 +462,7 @@ export default function UserManagement() {
                     <TableHead>Contact</TableHead>
                     <TableHead>Role</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Last Active</TableHead>
+                    <TableHead>Last Login</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -456,7 +486,7 @@ export default function UserManagement() {
                           <div>
                             <div className="font-medium">{user.name}</div>
                             <div className="text-sm text-gray-500">
-                              Joined {user.joinDate}
+                              Joined {user.join_date}
                             </div>
                           </div>
                         </div>
@@ -481,14 +511,14 @@ export default function UserManagement() {
                       <TableCell>
                         <Badge
                           variant={
-                            user.status === "active" ? "default" : "secondary"
+                            user.status === "active" ? "default" : "destructive"
                           }
                         >
                           {user.status}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm text-gray-500">
-                        {user.lastActive}
+                        {formatDateTime(user.last_sign_in)}
                       </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>

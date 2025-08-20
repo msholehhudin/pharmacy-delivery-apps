@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Delivery Pharmacy App",
-  description: "Build in by Revingerz, Inc.",
+  title: "MediXpress | Delivery Pharmacy App",
+  description: "Buildin by Revingerz, Inc.",
 };
 
 export default function RootLayout({

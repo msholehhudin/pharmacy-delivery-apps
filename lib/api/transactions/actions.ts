@@ -9,7 +9,7 @@ export const createTransaction = async(values: TransactionFormValues) => {
     const {data: {session}} = await supabase.auth.getSession();
     if(!session) throw new Error('Not authenticated')
 
-    const inserData = {
+    const insertData = {
         patient_name: values.patientName,
         patient_address: values.patientAddress,
         patient_phone: values.patientPhone,
@@ -24,7 +24,7 @@ export const createTransaction = async(values: TransactionFormValues) => {
 
     const {data, error} = await supabase
         .from('transactions')
-        .insert(inserData)
+        .insert(insertData)
         .select('*')
         .single();
 
