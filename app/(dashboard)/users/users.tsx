@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Plus,
   Search,
@@ -13,6 +13,7 @@ import {
   Mail,
   Phone,
   Calendar,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,27 +57,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthProvider";
 import { formatDateTime } from "@/utils/helper";
 import axios from "axios";
 import Toast, { ToastProps } from "@/components/ui/toast";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  status: "active" | "inactive";
-  avatar: string;
-  join_date: string;
-  last_sign_in: string;
-}
+import { supabase } from "@/lib/supabase/client";
+import { useCreateUser, useUsers } from "@/hooks/Users/useUsers";
+import { User } from "@/types/user";
+// import { useUserMutation } from "@/hooks/Users/useUsers";
 
 export default function UserManagement() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [users, setUsers] = useState<User[]>([]);
+  // const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState<ToastProps | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -91,100 +83,77 @@ export default function UserManagement() {
     status: "active" as "active" | "inactive",
   });
 
-  const supabase = createClient();
-  const { user } = useAuth();
-  useEffect(() => {
-    if (!user) return;
+  const { user: currentUser } = useAuth();
+  const { data: users = [], isLoading, error, refetch } = useUsers();
+  console.log("users supabase : ", users);
+  const createUserMutation = useCreateUser();
 
-    const fetchUsers = async () => {
-      const { data, error } = await supabase.from("users").select("*");
+  // const filteredUsers = users.filter(
+  //   (user) =>
+  //     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     user.role.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
-      console.log("ini user di user page : ", data);
-
-      if (error) console.error(error);
-      else setUsers(data || []);
-    };
-
-    fetchUsers();
-  }, [user]);
-
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = useMemo(() => {
+    if (!users) return [];
+    return users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.role.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [users, searchTerm]);
 
   const handleAddUser = async () => {
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/users/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: formData.email,
-          password: "mediXpress!",
-        }),
-      });
-
-      const data = await res.json();
-
-      const newUser: User = {
-        id: data.user.id,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        role: formData.role,
-        status: formData.status,
-        avatar: "/placeholder.svg?height=40&width=40",
-        join_date: new Date().toISOString().split("T")[0],
-        last_sign_in: "",
-      };
-
-      console.log("User : ", data);
-
-      const { data: userData, error } = await supabase
-        .from("users")
-        .insert([newUser])
-        .select();
-      // setUsers([...users, newUser]);
-
-      if (error) throw error;
-
-      console.log("ini data setelah insert : ", userData);
-
-      setIsAddDialogOpen(false);
-      resetForm();
-      showToast("User created successfully!", "success");
-    } catch (error) {
-      // console.error("Error creating user : ", err);
-      showToast(`Failed to created user: ${error}`, "error");
-    } finally {
-      setIsLoading(false);
-    }
+    // createUserMutation.mutate(
+    //   { email: formData.email, password: "mediXpress123!" },
+    //   {
+    //     onSuccess: async (data) => {
+    //       const newUser: User = {
+    //         id: data.user.id,
+    //         name: formData.name,
+    //         email: formData.email,
+    //         phone: formData.phone,
+    //         role: formData.role,
+    //         status: formData.status,
+    //         avatar: "/placeholder.svg?height=40&width=40",
+    //         last_sign_in: null,
+    //       };
+    //       const { error } = await supabase.from("users").insert([newUser]);
+    //       if (error) throw error;
+    //       console.log("User saved to database : ", newUser);
+    //       setIsAddDialogOpen(false);
+    //       resetForm();
+    //       showToast("User created successfully!", "success");
+    //     },
+    //     onError: (error) => {
+    //       console.error("Failed: ", error);
+    //     },
+    //   }
+    // );
   };
 
-  const handleEditUser = () => {
-    if (!selectedUser) return;
+  // const handleEditUser = () => {
+  //   if (!selectedUser) return;
 
-    const updatedUsers = users.map((user) =>
-      user.id === selectedUser.id ? { ...user, ...formData } : user
-    );
-    setUsers(updatedUsers);
-    setIsEditDialogOpen(false);
-    resetForm();
-    setSelectedUser(null);
-  };
+  //   const updatedUsers = users.map((user) =>
+  //     user.id === selectedUser.id ? { ...user, ...formData } : user
+  //   );
+  //   // setUsers(updatedUsers);
+  //   setIsEditDialogOpen(false);
+  //   resetForm();
+  //   setSelectedUser(null);
+  // };
 
-  const handleDeleteUser = () => {
-    if (!selectedUser) return;
+  // const handleDeleteUser = () => {
+  //   if (!selectedUser) return;
 
-    const updatedUsers = users.filter((user) => user.id !== selectedUser.id);
-    setUsers(updatedUsers);
-    setIsDeleteDialogOpen(false);
-    setSelectedUser(null);
-  };
+  //   const updatedUsers = users.filter((user) => user.id !== selectedUser.id);
+  //   setUsers(updatedUsers);
+  //   setIsDeleteDialogOpen(false);
+  //   setSelectedUser(null);
+  // };
 
   const openEditDialog = (user: User) => {
     setSelectedUser(user);
@@ -231,6 +200,15 @@ export default function UserManagement() {
   const showToast = (message: string, type: string) => {
     setToast({ message, type });
   };
+
+  // Add error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600">Error loading users: {error.message}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen ">
@@ -297,7 +275,7 @@ export default function UserManagement() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {users.filter((u) => u.role === "Pharmacy Staff").length}
+                  {users.filter((u) => u.role === "pharmacy_staff").length}
                 </div>
                 <p className="text-xs text-muted-foreground">No change</p>
               </CardContent>
@@ -437,8 +415,19 @@ export default function UserManagement() {
                     type="submit"
                     onClick={handleAddUser}
                     className="hover:cursor-pointer"
+                    disabled={createUserMutation.isPending}
                   >
-                    Add User
+                    {createUserMutation.isPending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />{" "}
+                        <span>Creating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4" />
+                        <span>Add User</span>
+                      </>
+                    )}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -455,106 +444,117 @@ export default function UserManagement() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Last Login</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex items-center space-x-3">
-                          <Avatar>
-                            <AvatarImage
-                              src={user.avatar || "/placeholder.svg"}
-                              alt={user.name}
-                            />
-                            <AvatarFallback>
-                              {user.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="font-medium">{user.name}</div>
-                            <div className="text-sm text-gray-500">
-                              Joined {user.join_date}
+              {isLoading ? (
+                <div className="flex items-center justify-center py-10">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                  <span className="ml-3">Loading users...</span>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Contact</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Last Login</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredUsers.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div className="flex items-center space-x-3">
+                            <Avatar>
+                              <AvatarImage
+                                src={user.avatar || "/placeholder.svg"}
+                                alt={user.name}
+                              />
+                              <AvatarFallback>
+                                {user.name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium">{user.name}</div>
+                              <div className="text-sm text-gray-500">
+                                Joined {formatDateTime(user.created_at)}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="flex items-center text-sm">
-                            <Mail className="mr-1 h-3 w-3" />
-                            {user.email}
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="flex items-center text-sm">
+                              <Mail className="mr-1 h-3 w-3" />
+                              {user.email}
+                            </div>
+                            <div className="flex items-center text-sm text-gray-500 mt-1">
+                              <Phone className="mr-1 h-3 w-3" />
+                              {user.phone}
+                            </div>
                           </div>
-                          <div className="flex items-center text-sm text-gray-500 mt-1">
-                            <Phone className="mr-1 h-3 w-3" />
-                            {user.phone}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getRoleColor(user.role)}>
-                          {user.role}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            user.status === "active" ? "default" : "destructive"
-                          }
-                        >
-                          {user.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-500">
-                        {formatDateTime(user.last_sign_in)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => openEditDialog(user)}
-                            >
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => openDeleteDialog(user)}
-                              className="text-red-600"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getRoleColor(user.role)}>
+                            {user.role}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              user.status === "active"
+                                ? "default"
+                                : "destructive"
+                            }
+                          >
+                            {user.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm text-gray-500">
+                          {user.last_sign_in
+                            ? formatDateTime(user.last_sign_in)
+                            : "Never Logged in"}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => openEditDialog(user)}
+                              >
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => openDeleteDialog(user)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </div>
       </div>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      {/* <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
@@ -648,10 +648,10 @@ export default function UserManagement() {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      {/* <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete User</DialogTitle>
@@ -672,7 +672,7 @@ export default function UserManagement() {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }

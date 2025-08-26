@@ -57,10 +57,13 @@ export const LoginForm = ({
 
       const urlParams = new URLSearchParams(window.location.search);
       const redirect = urlParams.get("redirect") || "/users";
+      setIsLoading(false);
       router.push(redirect);
     } catch (err) {
       console.error("Error Login : ", err);
       setError("Invalid Credentials. Please try again.");
+
+      setIsLoading(false);
     }
   };
 

@@ -1,9 +1,30 @@
 export const UserRoles = ["courier", "pharmacy_staff", "pharmacy_super_admin"] as const
 export type UserRole = typeof UserRoles[number]
 
+// export interface User {
+//     id: string;
+//     email: string;
+//     name?: string;
+//     role?: UserRole;
+//     phone?: string;
+//     avatar?: string;
+//     status: string
+// }
+
 export interface User {
     id: string;
+    name: string;
     email: string;
-    name?: string;
-    role?: UserRole;
+    phone: string;
+    role: string;
+    status: "active" | "inactive";
+    avatar: string;
+    created_at: string;
+    last_sign_in: string | null;
+}
+
+export interface CreateUserData {
+    email: string
+    password: string
+    role?: string
 }

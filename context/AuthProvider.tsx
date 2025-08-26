@@ -1,6 +1,6 @@
 "use client";
 import api from "@/lib/axios";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { User } from "@/types/user";
 import axios, { Axios, AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const supabase = createClient();
   const [loadingLogout, setLogoutLoading] = useState(false);
 
   const router = useRouter();
@@ -69,6 +68,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           email: session.user.email ?? "",
           name: userData.name ?? "",
           role: userData.role ?? "",
+          phone: userData.phone ?? "",
+          status: userData.avatar ?? "",
         });
         console.log("data di session  : ", userData);
       }
@@ -105,7 +106,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(false);
       }
     },
-    [supabase]
+    [getSession]
   );
 
   const logout = useCallback(async () => {
@@ -121,26 +122,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } finally {
       setLogoutLoading(false);
     }
-  }, []);
+  }, [router]);
 
-  const resetPassword = useCallback(
-    async (email: string) => {
-      try {
-        setLoading(true);
-        setError(null);
-      } catch (err) {
-        console.error("Password reset error: ", err);
-        setError("Password reset failed. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    },
-    [supabase]
-  );
+  const resetPassword = useCallback(async (email: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+    } catch (err) {
+      console.error("Password reset error: ", err);
+      setError("Password reset failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     getSession();
-  }, [getSession, supabase]);
+  }, [getSession]);
 
   // refreshUser,
   return (

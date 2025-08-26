@@ -2,7 +2,7 @@
 
 import FullScreenLoader from "@/components/ui/FullScreenLoader";
 import { useAuth } from "@/context/AuthProvider";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { useEffect } from "react";
 
 export default function ClientLayout({
@@ -10,7 +10,6 @@ export default function ClientLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {

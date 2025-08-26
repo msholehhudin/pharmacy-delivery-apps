@@ -6,26 +6,21 @@ export async function updateSession(request: NextRequest) {
     request,
   })
 
-  const supabase = createServerClient(
+   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
+        getAll: () => request.cookies.getAll(),
+        setAll: (cookies) => {
+          cookies.forEach(({ name, value, options }) => {
+            supabaseResponse.cookies.set(name, value, options);
+          });
         },
       },
     }
-  )
+  );
+  
 
   // Do not run code between createServerClient and
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
@@ -37,30 +32,26 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  let isAuthenticated = false
   const {pathname, searchParams} = request.nextUrl
   
-  if (
-    !user &&
-    !pathname.startsWith('/login') 
-  ) {
+  // 1. Unauthenticated → redirect to login
+  if (!user && !pathname.startsWith('/login') ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
-    if(user && pathname == '/login'){
-          const redirectTo = searchParams.get('redirect') || '/home'
-          return NextResponse.redirect(new URL(redirectTo, request.url))
-        }
+  // 2. Authenticated but tries to go to /login → send to home
+  if(user && pathname == '/login'){
+    const redirectTo = searchParams.get('redirect') || '/home'
+    return NextResponse.redirect(new URL(redirectTo, request.url))
+  }
   
-   if(pathname == '/'){
-        const redirectPath = searchParams.get('redirect')  ?? (user ? '/home' : '/login')
-        if(pathname !== redirectPath){
-            return NextResponse.redirect(new URL(redirectPath, request.url))
-        }
-    }
+  // 3. Root (/) → decide where to send
+  if(pathname == '/'){
+    return NextResponse.redirect(new URL(user ? '/home' : '/login', request.url)) 
+  }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
