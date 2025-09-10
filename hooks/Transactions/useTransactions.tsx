@@ -1,14 +1,13 @@
 "use client";
 
 import { getClientTransactions } from "@/lib/api/transactions/client-queries";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { Transaction } from "@/types/transactions";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 const useTransactions = (initialData?: Transaction[]) => {
   const queryClient = useQueryClient();
-  const supabase = createClient();
 
   useEffect(() => {
     const setupChannel = async () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Plus,
   Search,
@@ -13,6 +13,7 @@ import {
   Mail,
   Phone,
   Calendar,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,68 +57,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  status: "active" | "inactive";
-  avatar: string;
-  joinDate: string;
-  lastActive: string;
-}
-
-const initialUsers: User[] = [
-  {
-    id: "1",
-    name: "Bos Nawi",
-    email: "bos.nawi@example.com",
-    phone: "+62852 111 222 ",
-    role: "Head of Pharmacy",
-    status: "active",
-    avatar: "/placeholder.svg?height=40&width=40",
-    joinDate: "2024-01-15",
-    lastActive: "2 hours ago",
-  },
-  {
-    id: "2",
-    name: "Helos",
-    email: "helos@example.com",
-    phone: "+62852 222 111 ",
-    role: "Courier",
-    status: "active",
-    avatar: "/placeholder.svg?height=40&width=40",
-    joinDate: "2024-02-20",
-    lastActive: "1 day ago",
-  },
-  {
-    id: "3",
-    name: "Bojes",
-    email: "bojes@example.com",
-    phone: "+62852 112 221 ",
-    role: "Pharmacy Staff",
-    status: "inactive",
-    avatar: "/placeholder.svg?height=40&width=40",
-    joinDate: "2024-03-10",
-    lastActive: "1 week ago",
-  },
-  {
-    id: "4",
-    name: "Paijo",
-    email: "paijo@example.com",
-    phone: "+62852 122 211 ",
-    role: "Pharmacy Staff",
-    status: "active",
-    avatar: "/placeholder.svg?height=40&width=40",
-    joinDate: "2024-01-25",
-    lastActive: "30 minutes ago",
-  },
-];
+import { useAuth } from "@/context/AuthProvider";
+import { formatDateTime } from "@/utils/helper";
+import axios from "axios";
+import Toast, { ToastProps } from "@/components/ui/toast";
+import { supabase } from "@/lib/supabase/client";
+import { useCreateUser, useUsers } from "@/hooks/Users/useUsers";
+import { User } from "@/types/user";
+// import { useUserMutation } from "@/hooks/Users/useUsers";
 
 export default function UserManagement() {
-  const [users, setUsers] = useState<User[]>(initialUsers);
+  // const [users, setUsers] = useState<User[]>([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState<ToastProps | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -131,50 +83,80 @@ export default function UserManagement() {
     status: "active" as "active" | "inactive",
   });
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const { user: currentUser } = useAuth();
+  const { data: users = [], isLoading, error, refetch } = useUsers();
+  console.log("users supabase : ", users);
+  const createUserMutation = useCreateUser();
 
-  const handleAddUser = () => {
-    const newUser: User = {
-      id: Date.now().toString(),
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      role: formData.role,
-      status: formData.status,
-      avatar: "/placeholder.svg?height=40&width=40",
-      joinDate: new Date().toISOString().split("T")[0],
-      lastActive: "Just now",
-    };
-    setUsers([...users, newUser]);
-    setIsAddDialogOpen(false);
-    resetForm();
-  };
+  // const filteredUsers = users.filter(
+  //   (user) =>
+  //     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     user.role.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
-  const handleEditUser = () => {
-    if (!selectedUser) return;
-
-    const updatedUsers = users.map((user) =>
-      user.id === selectedUser.id ? { ...user, ...formData } : user
+  const filteredUsers = useMemo(() => {
+    if (!users) return [];
+    return users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.role.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setUsers(updatedUsers);
-    setIsEditDialogOpen(false);
-    resetForm();
-    setSelectedUser(null);
+  }, [users, searchTerm]);
+
+  const handleAddUser = async () => {
+    createUserMutation.mutate(
+      {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        role: formData.role,
+        status: formData.status,
+        avatar: "/placeholder.svg?height=40&width=40",
+        password: "mediXpress123!",
+        // last_sign_in: null,
+        // created_at: new Date().toISOString(),
+      },
+      {
+        onSuccess: async (user) => {
+          console.log("User created successfully : ", user);
+          setIsAddDialogOpen(false);
+          resetForm();
+          showToast(
+            "success",
+            "User Added successfully!",
+            `${user} has been added to the system`
+          );
+        },
+        onError: (error) => {
+          console.error("Failed: ", error);
+          showToast("error", "Failed to Add User", `Error ${error}`);
+        },
+      }
+    );
   };
 
-  const handleDeleteUser = () => {
-    if (!selectedUser) return;
+  // const handleEditUser = () => {
+  //   if (!selectedUser) return;
 
-    const updatedUsers = users.filter((user) => user.id !== selectedUser.id);
-    setUsers(updatedUsers);
-    setIsDeleteDialogOpen(false);
-    setSelectedUser(null);
-  };
+  //   const updatedUsers = users.map((user) =>
+  //     user.id === selectedUser.id ? { ...user, ...formData } : user
+  //   );
+  //   // setUsers(updatedUsers);
+  //   setIsEditDialogOpen(false);
+  //   resetForm();
+  //   setSelectedUser(null);
+  // };
+
+  // const handleDeleteUser = () => {
+  //   if (!selectedUser) return;
+
+  //   const updatedUsers = users.filter((user) => user.id !== selectedUser.id);
+  //   setUsers(updatedUsers);
+  //   setIsDeleteDialogOpen(false);
+  //   setSelectedUser(null);
+  // };
 
   const openEditDialog = (user: User) => {
     setSelectedUser(user);
@@ -205,21 +187,48 @@ export default function UserManagement() {
 
   const getRoleColor = (role: string) => {
     switch (role.toLowerCase()) {
-      case "head of pharmacy":
+      case "pharmacy_super_admin":
         return "bg-red-100 text-red-800";
-      case "pharmacy staff":
+      case "pharmacy_apoteker":
+        return "bg-info-100 text-green-800";
+      case "pharmacy_staff":
         return "bg-blue-100 text-blue-800";
       case "courier":
         return "bg-green-100 text-yellow-800";
-      case "support":
-        return "bg-purple-100 text-purple-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
+  const showToast = (type: string, title: string, message: string) => {
+    setToast({ type, title, message });
+  };
+
+  // Add error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600">Error loading users: {error.message}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen ">
+      {/* Toast Notification */}
+      <div className="fixed top-4 right-4 space-y-3 z-50">
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+            autoClose={true}
+            duration={6000}
+            title={toast.title}
+          />
+        )}
+      </div>
+
       {/* Main Content */}
       <div className="">
         <div className="px-8 py-6">
@@ -274,7 +283,7 @@ export default function UserManagement() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {users.filter((u) => u.role === "Pharmacy Staff").length}
+                  {users.filter((u) => u.role === "pharmacy_staff").length}
                 </div>
                 <p className="text-xs text-muted-foreground">No change</p>
               </CardContent>
@@ -310,7 +319,7 @@ export default function UserManagement() {
             </div>
 
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
+              <DialogTrigger asChild className="hover:cursor-pointer">
                 <Button onClick={() => resetForm()}>
                   <Plus className="mr-2 h-4 w-4" />
                   Add User
@@ -379,6 +388,9 @@ export default function UserManagement() {
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="pharmacy_apoteker">
+                          Pharmacy Apoteker
+                        </SelectItem>
                         <SelectItem value="pharmacy_staff">
                           Pharmacy Staff
                         </SelectItem>
@@ -407,8 +419,23 @@ export default function UserManagement() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit" onClick={handleAddUser}>
-                    Add User
+                  <Button
+                    type="submit"
+                    onClick={handleAddUser}
+                    className="hover:cursor-pointer"
+                    disabled={createUserMutation.isPending}
+                  >
+                    {createUserMutation.isPending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />{" "}
+                        <span>Creating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4" />
+                        <span>Add User</span>
+                      </>
+                    )}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -425,106 +452,123 @@ export default function UserManagement() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Last Active</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex items-center space-x-3">
-                          <Avatar>
-                            <AvatarImage
-                              src={user.avatar || "/placeholder.svg"}
-                              alt={user.name}
-                            />
-                            <AvatarFallback>
-                              {user.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="font-medium">{user.name}</div>
-                            <div className="text-sm text-gray-500">
-                              Joined {user.joinDate}
+              {isLoading ? (
+                <div className="flex items-center justify-center py-10">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                  <span className="ml-3">Loading users...</span>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader className="bg-muted rounded-full">
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Contact</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Last Login</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredUsers.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div className="flex items-center space-x-3">
+                            <Avatar>
+                              <AvatarImage
+                                src={user.avatar || "/placeholder.svg"}
+                                alt={user.name}
+                              />
+                              <AvatarFallback>
+                                {user.name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium">{user.name}</div>
+                              <div className="text-sm text-gray-500">
+                                Joined {formatDateTime(user.created_at)}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="flex items-center text-sm">
-                            <Mail className="mr-1 h-3 w-3" />
-                            {user.email}
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="flex items-center text-sm">
+                              <Mail className="mr-1 h-3 w-3" />
+                              {user.email}
+                            </div>
+                            <div className="flex items-center text-sm text-gray-500 mt-1">
+                              <Phone className="mr-1 h-3 w-3" />
+                              {user.phone}
+                            </div>
                           </div>
-                          <div className="flex items-center text-sm text-gray-500 mt-1">
-                            <Phone className="mr-1 h-3 w-3" />
-                            {user.phone}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getRoleColor(user.role)}>
-                          {user.role}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            user.status === "active" ? "default" : "secondary"
-                          }
-                        >
-                          {user.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-500">
-                        {user.lastActive}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => openEditDialog(user)}
-                            >
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => openDeleteDialog(user)}
-                              className="text-red-600"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getRoleColor(user.role)}>
+                            {user.role == "pharmacy_super_admin"
+                              ? "Pharmacy SA"
+                              : user.role == "pharmacy_apoteker"
+                              ? "Head of Pharmacy"
+                              : user.role == "pharmacy_staff"
+                              ? "Pharmacy Staff"
+                              : "Courier"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              user.status === "active"
+                                ? "default"
+                                : "destructive"
+                            }
+                          >
+                            {user.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm text-gray-500">
+                          {user.last_sign_in
+                            ? formatDateTime(user.last_sign_in)
+                            : "Never Logged in"}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => openEditDialog(user)}
+                              >
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => openDeleteDialog(user)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </div>
       </div>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      {/* <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
@@ -618,10 +662,10 @@ export default function UserManagement() {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      {/* <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete User</DialogTitle>
@@ -642,7 +686,7 @@ export default function UserManagement() {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }
