@@ -2,10 +2,17 @@ import { CreateUserData, User } from "@/types/user"
 
 
 export const createUser = async(userData: CreateUserData): Promise<User> => {
-    const res = await fetch("/api/users", {
+    const res = await fetch("/api/users/insert", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(userData)
+        body: JSON.stringify({
+          email: userData.email,
+          password: userData.password,
+          role: userData.role,
+          name: userData.name,
+          phone: userData.phone,
+          status: userData.status || 'active'
+        })
     })
 
     if(!res.ok){

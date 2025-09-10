@@ -106,32 +106,35 @@ export default function UserManagement() {
   }, [users, searchTerm]);
 
   const handleAddUser = async () => {
-    // createUserMutation.mutate(
-    //   { email: formData.email, password: "mediXpress123!" },
-    //   {
-    //     onSuccess: async (data) => {
-    //       const newUser: User = {
-    //         id: data.user.id,
-    //         name: formData.name,
-    //         email: formData.email,
-    //         phone: formData.phone,
-    //         role: formData.role,
-    //         status: formData.status,
-    //         avatar: "/placeholder.svg?height=40&width=40",
-    //         last_sign_in: null,
-    //       };
-    //       const { error } = await supabase.from("users").insert([newUser]);
-    //       if (error) throw error;
-    //       console.log("User saved to database : ", newUser);
-    //       setIsAddDialogOpen(false);
-    //       resetForm();
-    //       showToast("User created successfully!", "success");
-    //     },
-    //     onError: (error) => {
-    //       console.error("Failed: ", error);
-    //     },
-    //   }
-    // );
+    createUserMutation.mutate(
+      {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        role: formData.role,
+        status: formData.status,
+        avatar: "/placeholder.svg?height=40&width=40",
+        password: "mediXpress123!",
+        // last_sign_in: null,
+        // created_at: new Date().toISOString(),
+      },
+      {
+        onSuccess: async (user) => {
+          console.log("User created successfully : ", user);
+          setIsAddDialogOpen(false);
+          resetForm();
+          showToast(
+            "success",
+            "User Added successfully!",
+            `${user} has been added to the system`
+          );
+        },
+        onError: (error) => {
+          console.error("Failed: ", error);
+          showToast("error", "Failed to Add User", `Error ${error}`);
+        },
+      }
+    );
   };
 
   // const handleEditUser = () => {
@@ -184,21 +187,21 @@ export default function UserManagement() {
 
   const getRoleColor = (role: string) => {
     switch (role.toLowerCase()) {
-      case "head of pharmacy":
+      case "pharmacy_super_admin":
         return "bg-red-100 text-red-800";
-      case "pharmacy staff":
+      case "pharmacy_apoteker":
+        return "bg-info-100 text-green-800";
+      case "pharmacy_staff":
         return "bg-blue-100 text-blue-800";
       case "courier":
         return "bg-green-100 text-yellow-800";
-      case "support":
-        return "bg-purple-100 text-purple-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  const showToast = (message: string, type: string) => {
-    setToast({ message, type });
+  const showToast = (type: string, title: string, message: string) => {
+    setToast({ type, title, message });
   };
 
   // Add error state
@@ -213,13 +216,18 @@ export default function UserManagement() {
   return (
     <div className="min-h-screen ">
       {/* Toast Notification */}
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
+      <div className="fixed top-4 right-4 space-y-3 z-50">
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+            autoClose={true}
+            duration={6000}
+            title={toast.title}
+          />
+        )}
+      </div>
 
       {/* Main Content */}
       <div className="">
@@ -451,7 +459,7 @@ export default function UserManagement() {
                 </div>
               ) : (
                 <Table>
-                  <TableHeader>
+                  <TableHeader className="bg-muted rounded-full">
                     <TableRow>
                       <TableHead>User</TableHead>
                       <TableHead>Contact</TableHead>
@@ -500,7 +508,13 @@ export default function UserManagement() {
                         </TableCell>
                         <TableCell>
                           <Badge className={getRoleColor(user.role)}>
-                            {user.role}
+                            {user.role == "pharmacy_super_admin"
+                              ? "Pharmacy SA"
+                              : user.role == "pharmacy_apoteker"
+                              ? "Head of Pharmacy"
+                              : user.role == "pharmacy_staff"
+                              ? "Pharmacy Staff"
+                              : "Courier"}
                           </Badge>
                         </TableCell>
                         <TableCell>

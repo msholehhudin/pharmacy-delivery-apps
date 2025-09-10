@@ -6,36 +6,6 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase/client";
 import { createServer } from "@/lib/supabase/server";
 
-export async function POST(req: Request){
-    try{
-
-        const {email, password, role} = await req.json()
-
-        if(!email || !password){
-            return NextResponse.json(
-                {error: 'Email and password are required!'},
-                {status: 400}
-            )
-        }
-
-        const {data, error} = await supabaseAdmin.auth.admin.createUser({
-            email,
-            password,
-            user_metadata: {role}
-        })
-
-        if(error){
-            return NextResponse.json({error: error.message}, {status: 400})
-        }
-
-        return NextResponse.json({user: data.user})
-    }catch(err){
-        return NextResponse.json(
-            {error: "Something went wrong"}, 
-            {status: 500}
-        )
-    }
-}
 
 export const GET = async () => {
     try{
@@ -47,7 +17,7 @@ export const GET = async () => {
         }
 
         // Fetch users table
-        const {data: users, error} = await supabase
+        const {data: users, error} = await supabaseAdmin
             .from('users')
             .select('id, name, email, role, phone, created_at, last_sign_in, status, avatar')
             .order('created_at', {ascending: false})

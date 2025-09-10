@@ -65,11 +65,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (userData) {
         setUser({
           id: session.user.id,
-          email: session.user.email ?? "",
           name: userData.name ?? "",
-          role: userData.role ?? "",
+          email: session.user.email ?? "",
           phone: userData.phone ?? "",
-          status: userData.avatar ?? "",
+          role: userData.role ?? "",
+          status: userData.status ?? "",
+          avatar: userData.avatar ?? "",
+          created_at: userData.created_at ?? "",
+          last_sign_in: userData.last_sign_in ?? "",
         });
         console.log("data di session  : ", userData);
       }

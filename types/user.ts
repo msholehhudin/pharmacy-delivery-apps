@@ -27,4 +27,8 @@ export interface CreateUserData {
     email: string
     password: string
     role?: string
+    name: string
+    phone?: string
+    status?: "active" | "inactive"
+    avatar?: string 
 }
