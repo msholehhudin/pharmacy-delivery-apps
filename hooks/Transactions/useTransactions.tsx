@@ -1,56 +1,15 @@
 "use client";
 
-import { getClientTransactions } from "@/lib/api/transactions/client-queries";
-import { supabase } from "@/lib/supabase/client";
+import { transactionClientService } from "@/lib/services/transactions/transactionClientServices";
 import { Transaction } from "@/types/transactions";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const useTransactions = (initialData?: Transaction[]) => {
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const setupChannel = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const channel = supabase
-        .channel("transactions-changes")
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "transactions",
-          },
-          () => {
-            queryClient.invalidateQueries({
-              queryKey: ["transactions"],
-              exact: true,
-            });
-          }
-        )
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    };
-
-    const cleanupPromise = setupChannel();
-    return () => {
-      cleanupPromise.then((cleanup) => cleanup?.());
-    };
-  }, [queryClient, supabase]);
-
   return useQuery({
     queryKey: ["transactions"],
-    queryFn: getClientTransactions,
+    queryFn: () => transactionClientService.getTransactions(),
     initialData,
     staleTime: 60 * 1000,
-    refetchOnWindowFocus: false,
   });
 };
 

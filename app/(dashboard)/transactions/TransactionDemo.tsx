@@ -60,6 +60,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import useTransactions from "@/hooks/Transactions/useTransactions";
 // import type { DateRange } from "react-day-picker";
 
 interface Transaction {
@@ -170,6 +171,9 @@ export default function TransactionDemo() {
     medicines: "",
     notes: "",
   });
+
+  const fetchingData = useTransactions();
+  console.log("fetching on client component : ", fetchingData);
 
   const filteredTransactions = transactions.filter((transaction) => {
     const matchesSearch =

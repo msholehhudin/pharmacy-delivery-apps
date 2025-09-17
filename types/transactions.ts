@@ -1,3 +1,5 @@
+import z from "zod"
+
 export type MedicineItems = {
     name: string
     qty: number
@@ -34,3 +36,27 @@ export interface CreateTransactionDTO {
     delivery_fee: number
     note?: string
 }
+
+export const formSchema = z.object({
+  patientName: z.string().min(1, "Patient name is required"),
+  patientAddress: z.string().min(1, "Address is required"),
+  patientPhone: z
+    .string()
+    .min(1, "Phone is required")
+    .regex(/^\d+$/, "Must be a number"),
+  courier: z.string().min(1, "Courier is required"),
+  prescriptionDetails: z.string().min(1, "Prescription details are required"),
+  totalAmount: z
+    .string()
+    .min(1, "Total amount is required")
+    .regex(/^\d+$/, "Must be a number"),
+  paymentMethod: z.enum(["cash", "transfer"], {
+    error: "Payment method is required.",
+  }),
+  // status: z.enum(["pending", "on_delivery", "completed"], {
+  //   error: "Status is required",
+  // }),
+  notes: z.string().optional(),
+});
+
+export type TransactionFormValues = z.infer<typeof formSchema>;

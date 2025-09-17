@@ -1,6 +1,6 @@
 "use client";
 
-import { createUser, getUsers } from "@/services/usersService";
+import { createUser, getUsers } from "@/lib/services/users/usersService";
 import { User } from "@/types/user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
