@@ -1,9 +1,12 @@
 import z from "zod"
 
 export type MedicineItems = {
+    id: string
     name: string
+    dosage: string
     qty: number
-    note?: string
+    price: number
+    instructions?: string
 }
 
 export type TransactionStatus = 'pending' | 'on_delivery' | 'delivered' | 'cancelled'
@@ -60,3 +63,90 @@ export const formSchema = z.object({
 });
 
 export type TransactionFormValues = z.infer<typeof formSchema>;
+
+
+// DEMO
+
+
+export type TransactionDemoType = {
+  id: string;
+  customerName: string;
+  patientAddress: string;
+  amount: number;
+  type: "payment" | "refund" | "chargeback";
+  status: "completed" | "pending" | "failed" | "cancelled";
+  method: "credit_card" | "debit_card" | "bank_transfer" | "cash";
+  date: string;
+  medicines: string;
+  notes: string;
+  fee: number;
+}
+
+export const initialTransactionsDemo: TransactionDemoType[] = [
+  {
+    id: "TXN-001",
+    customerName: "Bojes o uno",
+    patientAddress: "Jalan By Pass, Pandaan",
+    amount: 129000,
+    type: "payment",
+    status: "completed",
+    method: "credit_card",
+    date: "2024-01-15T10:30:00Z",
+    medicines: "Panadol 500mg",
+    notes: "REF-2024-001",
+    fee: 12900,
+  },
+  {
+    id: "TXN-002",
+    customerName: "Onde Mande",
+    patientAddress: "Taman Dayu no. 4",
+    amount: 149000,
+    type: "payment",
+    status: "pending",
+    method: "bank_transfer",
+    date: "2024-01-14T15:45:00Z",
+    medicines: "Omeprazol 20mg",
+    notes: "REF-2024-002",
+    fee: 14900,
+  },
+  {
+    id: "TXN-003",
+    customerName: "Mike Sinoda",
+    patientAddress: "Taman Dayu No. 1",
+    amount: 89999,
+    type: "refund",
+    status: "completed",
+    method: "credit_card",
+    date: "2024-01-13T09:15:00Z",
+    medicines: "Amoxilin 20mg",
+    notes: "REF-2024-003",
+    fee: 8900,
+  },
+  {
+    id: "TXN-004",
+    customerName: "Emily Armstrong",
+    patientAddress: "Gempol, Pandaan",
+    amount: 59900,
+    type: "payment",
+    status: "failed",
+    method: "debit_card",
+    date: "2024-01-12T14:20:00Z",
+    medicines: "Metformin 500mg",
+    notes: "REF-2024-004",
+    fee: 5900,
+  },
+  {
+    id: "TXN-005",
+    customerName: "Alexandre Ichal",
+    patientAddress: "Gempol, Pandaan",
+    amount: 61000,
+    type: "payment",
+    status: "completed",
+    method: "cash",
+    date: "2024-01-11T11:00:00Z",
+    medicines: "Ibuprofen 20mg",
+    notes: "REF-2024-005",
+    fee: 6100,
+  },
+];
+

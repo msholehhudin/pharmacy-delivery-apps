@@ -1,4 +1,4 @@
-import { TransactionFormValues } from "@/components/Transactions/TransactionForm";
+import { TransactionFormValues } from "@/components/PharmacyTransactions/TransactionForm";
 import { supabaseAdmin } from "@/lib/supabase/admin"
 import { createServer } from "@/lib/supabase/server";
 import { NextResponse } from "next/server"

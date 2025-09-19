@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import TransactionForm, {
   TransactionFormValues,
-} from "@/components/Transactions/TransactionForm";
+} from "@/components/PharmacyTransactions/TransactionForm";
 import { Transaction } from "@/types/transactions";
 import useTransactions from "@/hooks/Transactions/useTransactions";
 

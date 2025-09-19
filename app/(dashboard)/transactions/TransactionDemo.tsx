@@ -61,93 +61,16 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useTransactions from "@/hooks/Transactions/useTransactions";
+import {
+  initialTransactionsDemo,
+  TransactionDemoType,
+} from "@/types/transactions";
 // import type { DateRange } from "react-day-picker";
 
-interface Transaction {
-  id: string;
-  customerName: string;
-  patientAddress: string;
-  amount: number;
-  type: "payment" | "refund" | "chargeback";
-  status: "completed" | "pending" | "failed" | "cancelled";
-  method: "credit_card" | "debit_card" | "bank_transfer" | "cash";
-  date: string;
-  medicines: string;
-  notes: string;
-  fee: number;
-}
-
-const initialTransactions: Transaction[] = [
-  {
-    id: "TXN-001",
-    customerName: "Bojes o uno",
-    patientAddress: "Jalan By Pass, Pandaan",
-    amount: 129000,
-    type: "payment",
-    status: "completed",
-    method: "credit_card",
-    date: "2024-01-15T10:30:00Z",
-    medicines: "Panadol 500mg",
-    notes: "REF-2024-001",
-    fee: 12900,
-  },
-  {
-    id: "TXN-002",
-    customerName: "Onde Mande",
-    patientAddress: "Taman Dayu no. 4",
-    amount: 149000,
-    type: "payment",
-    status: "pending",
-    method: "bank_transfer",
-    date: "2024-01-14T15:45:00Z",
-    medicines: "Omeprazol 20mg",
-    notes: "REF-2024-002",
-    fee: 14900,
-  },
-  {
-    id: "TXN-003",
-    customerName: "Mike Sinoda",
-    patientAddress: "Taman Dayu No. 1",
-    amount: 89999,
-    type: "refund",
-    status: "completed",
-    method: "credit_card",
-    date: "2024-01-13T09:15:00Z",
-    medicines: "Amoxilin 20mg",
-    notes: "REF-2024-003",
-    fee: 8900,
-  },
-  {
-    id: "TXN-004",
-    customerName: "Emily Armstrong",
-    patientAddress: "Gempol, Pandaan",
-    amount: 59900,
-    type: "payment",
-    status: "failed",
-    method: "debit_card",
-    date: "2024-01-12T14:20:00Z",
-    medicines: "Metformin 500mg",
-    notes: "REF-2024-004",
-    fee: 5900,
-  },
-  {
-    id: "TXN-005",
-    customerName: "Alexandre Ichal",
-    patientAddress: "Gempol, Pandaan",
-    amount: 61000,
-    type: "payment",
-    status: "completed",
-    method: "cash",
-    date: "2024-01-11T11:00:00Z",
-    medicines: "Ibuprofen 20mg",
-    notes: "REF-2024-005",
-    fee: 6100,
-  },
-];
-
 export default function TransactionDemo() {
-  const [transactions, setTransactions] =
-    useState<Transaction[]>(initialTransactions);
+  const [transactions, setTransactions] = useState<TransactionDemoType[]>(
+    initialTransactionsDemo
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
@@ -156,7 +79,7 @@ export default function TransactionDemo() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
+    useState<TransactionDemoType | null>(null);
   const [formData, setFormData] = useState({
     customerName: "",
     patientAddress: "",
@@ -265,7 +188,7 @@ export default function TransactionDemo() {
   };
 
   const handleAddTransaction = () => {
-    const newTransaction: Transaction = {
+    const newTransaction: TransactionDemoType = {
       id: `TXN-${String(transactions.length + 1).padStart(3, "0")}`,
       customerName: formData.customerName,
       patientAddress: formData.patientAddress,
@@ -318,7 +241,7 @@ export default function TransactionDemo() {
     setSelectedTransaction(null);
   };
 
-  const openEditDialog = (transaction: Transaction) => {
+  const openEditDialog = (transaction: TransactionDemoType) => {
     setSelectedTransaction(transaction);
     setFormData({
       customerName: transaction.customerName,
@@ -333,7 +256,7 @@ export default function TransactionDemo() {
     setIsEditDialogOpen(true);
   };
 
-  const openDeleteDialog = (transaction: Transaction) => {
+  const openDeleteDialog = (transaction: TransactionDemoType) => {
     setSelectedTransaction(transaction);
     setIsDeleteDialogOpen(true);
   };
