@@ -36,7 +36,7 @@ const TransactionDashboard = () => {
         />
         <TransactionsTable
           transactions={transactions ?? []}
-          isLoading={isLoading || isFetching}
+          isLoading={isLoading}
         />
 
         <PaginationControls

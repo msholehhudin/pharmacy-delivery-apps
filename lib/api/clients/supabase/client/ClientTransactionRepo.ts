@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
 import { Pagination } from "@/types/pagination";
 import { Transaction } from "@/types/transactions";
+import { mapTransaction } from "@/utils/transaction.mapper";
 
 export class ClientTransactionRepo{
     async getTransaction(pagination: Pagination): Promise<Transaction[]>{
@@ -26,6 +27,6 @@ export class ClientTransactionRepo{
         
         const {data, error} = await query
         if(error) throw error
-        return data || []
+        return data?.map(mapTransaction) || []
     }
 }

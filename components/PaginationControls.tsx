@@ -49,17 +49,18 @@ const PaginationControls = ({
       {/* Right */}
       <div className="flex items-center space-x-4">
         {/* <span>Showing</span> */}
+        <span>Rows per page</span>
         <Select
           value={String(pageSize)}
           onValueChange={(e) => onPageSizeChange(Number(e))}
         >
-          <SelectTrigger className="min-w-[120px]">
+          <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             {[10, 20, 50, 100].map((size) => (
               <SelectItem key={size} value={String(size)}>
-                {size} per page
+                {size}
               </SelectItem>
             ))}
           </SelectContent>

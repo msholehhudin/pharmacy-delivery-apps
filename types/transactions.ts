@@ -14,19 +14,19 @@ export type PaymentStatus = 'unpaid' | 'paid' | 'cancelled'
 
 export interface Transaction {
     id: number
-    recipient_name: string
-    recipient_address: string
-    recipient_phone: number
-    medicine_items: MedicineItems[]
-    delivery_date: string
-    courier_id: number
+    patientName: string
+    patientAddress: string
+    patientPhone: number
+    medicineItems: MedicineItems[]
+    amount: number
+    transactionDate: string
+    courier: string
     status: TransactionStatus
-    payment_status: PaymentStatus
-    delivery_fee:number
-    note?: string
-    created_by: number;
-    created_at: string
-    updated_at: string
+    // paymentStatus: PaymentStatus
+    paymentMethod: String
+    // fee:number
+    notes?: string
+    createdBy: string;
 }
 
 export interface CreateTransactionDTO {
