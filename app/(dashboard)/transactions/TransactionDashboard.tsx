@@ -22,6 +22,7 @@ const TransactionDashboard = () => {
   } = useTransactions(filters);
 
   console.log("data pagination : ", filters);
+  console.log("data transaction : ", isFetching);
 
   const { user } = useAuth();
   // console.log("user di transaction dashboard :", user);

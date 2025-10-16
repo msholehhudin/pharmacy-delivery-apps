@@ -25,7 +25,8 @@ export class ClientTransactionRepo{
             .order('created_at', {ascending: false})
             .range(from, to )
 
-        if(pagination.search && pagination.search.trim() !== ''){
+        const search = pagination.search?.trim()
+        if(search && search.length > 2){
             query = query.ilike("patient_name", `%${pagination.search}%`)
         }
 
