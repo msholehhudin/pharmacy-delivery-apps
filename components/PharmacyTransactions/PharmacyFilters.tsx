@@ -15,6 +15,7 @@ interface PharmacyFiltersProps {
   onSearchChange: (value: string) => void;
   statusFilter: string;
   onStatusChange: (value: string) => void;
+  onAddTransaction: () => void;
 }
 
 const PharmacyFilters = ({
@@ -22,6 +23,7 @@ const PharmacyFilters = ({
   onSearchChange,
   statusFilter,
   onStatusChange,
+  onAddTransaction,
 }: PharmacyFiltersProps) => {
   // console.log("search : ", search);
   return (
@@ -54,7 +56,7 @@ const PharmacyFilters = ({
           <Download className="mr-2 w-4 h-4" />
           Export
         </Button>
-        <Button className="hover:cursor-pointer">
+        <Button className="hover:cursor-pointer" onClick={onAddTransaction}>
           <Plus className="mr-2 w-4 h-4" />
           Add Transaction
         </Button>

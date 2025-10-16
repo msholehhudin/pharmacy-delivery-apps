@@ -1,4 +1,5 @@
 import { createServer } from "@/lib/supabase/server"
+import { generateTransactionCode } from "@/lib/utils/generators/transactionCode"
 import { Transaction, TransactionFormValues } from "@/types/transactions"
 
 export class ServerTransactionRepo{
@@ -18,7 +19,8 @@ export class ServerTransactionRepo{
             payment_method: values.paymentMethod,
             status: 'pending',
             notes: values.notes || null,
-            user_id: session.user.id
+            created_by: session.user.id,
+            prescription_code: generateTransactionCode()
         }
 
         const {data, error} = await supabase

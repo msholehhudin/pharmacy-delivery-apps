@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { formatDateTime, getStatusColor } from "@/utils/helper";
+import { formatCurrency, formatDateTime, getStatusColor } from "@/utils/helper";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,20 +23,21 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
-import { formatCurrency } from "@/lib/utils/transactions/currency";
 import { Badge } from "../ui/badge";
 
 interface TransactionTableProps {
   transactions: Transaction[];
   isLoading: boolean;
+  isFetching: boolean;
 }
 
 const TransactionsTable = ({
   transactions,
   isLoading,
+  isFetching,
 }: TransactionTableProps) => {
   console.log("TransactionList on table : ", transactions);
-  console.log("TransactionList on isLoading : ", isLoading);
+  // console.log("TransactionList on isLoading : ", isLoading);
   return (
     <Card>
       <CardHeader>
@@ -54,7 +55,7 @@ const TransactionsTable = ({
         ) : (
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted">
                 <TableHead>Transaction</TableHead>
                 <TableHead>Patient Name</TableHead>
                 <TableHead>Amount</TableHead>
@@ -72,8 +73,10 @@ const TransactionsTable = ({
                 <TableRow key={transaction.id}>
                   <TableCell>
                     <div>
-                      <div className="font-medium">{transaction.notes}</div>
-                      <div className="text-sm text-gray-500">test</div>
+                      <div className="font-medium">
+                        {transaction.prescriptionCode}
+                      </div>
+                      {/* <div className="text-sm text-gray-500">test</div> */}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -93,14 +96,14 @@ const TransactionsTable = ({
                     <div className="text-sm text-gray-500">Fee : Rp. 1000</div>
                   </TableCell>
                   <TableCell>{transaction.status}</TableCell>
-                  <TableCell>{transaction.status}</TableCell>
+                  <TableCell>{transaction.prescriptionDetails}</TableCell>
                   <TableCell>
                     <Badge className={getStatusColor(transaction.status)}>
                       {transaction.status}
                     </Badge>
                   </TableCell>
                   <TableCell>{transaction.paymentMethod}</TableCell>
-                  <TableCell>{transaction.courier}</TableCell>
+                  <TableCell>{transaction.courierName}</TableCell>
                   <TableCell>
                     {formatDateTime(transaction.transactionDate)}
                   </TableCell>

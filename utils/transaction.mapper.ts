@@ -13,7 +13,11 @@ export const mapTransaction =(row:any): Transaction => {
         createdBy: row.created_by,
         transactionDate: row.created_at,
         notes: row.notes,
-        paymentMethod: row.payment_method
+        paymentMethod: row.payment_method,
+        prescriptionDetails: row.prescription_details,
+        type: "payment",
+        courierName: row.courierName,
+        prescriptionCode: row.prescription_code
         // fee: 10% * row.total_amount 
     }
 } 

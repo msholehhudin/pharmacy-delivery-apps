@@ -31,23 +31,25 @@ const PaginationControls = ({
           variant={"outline"}
           disabled={page === 1}
           onClick={() => onPageChange(page - 1)}
+          className="hover:cursor-pointer"
         >
           Previous
         </Button>
         <span>
-          Page {page} of {totalPages}{" "}
+          Page {page} of {totalPages}
         </span>
         <Button
           variant={"outline"}
           disabled={page === totalPages}
           onClick={() => onPageChange(page + 1)}
+          className="hover:cursor-pointer"
         >
           Next
         </Button>
       </div>
 
       {/* Right */}
-      <div className="flex items-center space-x-4">
+      <div className="md:flex items-center space-x-4 hidden">
         {/* <span>Showing</span> */}
         <span>Rows per page</span>
         <Select

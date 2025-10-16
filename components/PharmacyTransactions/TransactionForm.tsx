@@ -253,7 +253,7 @@ const TransactionForm = () => {
             </FormItem>
           )}
         />
-        <div className="flex justify-end gap-3 mt-8">
+        {/* <div className="flex justify-end gap-3 mt-8">
           <AlertDialogCancel asChild>
             <Button variant={"outline"} className="cursor-pointer">
               Cancel
@@ -262,7 +262,7 @@ const TransactionForm = () => {
           <Button type="submit" className="cursor-pointer">
             Submit
           </Button>
-        </div>
+        </div> */}
       </form>
     </Form>
   );

@@ -4,7 +4,10 @@ import PaginationControls from "@/components/PaginationControls";
 import PharmacyFilters from "@/components/PharmacyTransactions/PharmacyFilters";
 import PharmacyHeader from "@/components/PharmacyTransactions/PharmacyHeader";
 import PharmacyStats from "@/components/PharmacyTransactions/PharmacyStats";
+import TransactionDialogs from "@/components/PharmacyTransactions/TransactionDialogs";
 import TransactionsTable from "@/components/PharmacyTransactions/TransactionsTable";
+import { useAuth } from "@/context/AuthProvider";
+import useTransactionDialogs from "@/hooks/Transactions/useTransactionDialogs";
 import useTransactionFilters from "@/hooks/Transactions/useTransactionFilters";
 import useTransactions from "@/hooks/Transactions/useTransactions";
 
@@ -18,7 +21,11 @@ const TransactionDashboard = () => {
     isFetching,
   } = useTransactions(filters);
 
-  const totalData = transactions?.length ?? 0;
+  console.log("data pagination : ", filters);
+
+  const { user } = useAuth();
+  // console.log("user di transaction dashboard :", user);
+  const { dialogStates, openDialog, closeDialog } = useTransactionDialogs();
 
   // console.log("List Transactions : ", filteredTransaction);
   return (
@@ -26,26 +33,32 @@ const TransactionDashboard = () => {
       <div className="px-8 py-6">
         <PharmacyHeader />
 
-        <PharmacyStats />
+        {user?.role !== "courier" && <PharmacyStats />}
 
-        <PharmacyFilters
-          search={filters.search}
-          onSearchChange={filters.setSearch}
-          statusFilter={filters.statusFilter}
-          onStatusChange={filters.setStatusFilter}
-        />
+        {user?.role !== "courier" && (
+          <PharmacyFilters
+            search={filters.search}
+            onSearchChange={filters.setSearch}
+            statusFilter={filters.statusFilter}
+            onStatusChange={filters.setStatusFilter}
+            onAddTransaction={() => openDialog("add")}
+          />
+        )}
         <TransactionsTable
-          transactions={transactions ?? []}
+          transactions={transactions?.data ?? []}
           isLoading={isLoading}
+          isFetching={isFetching}
         />
 
         <PaginationControls
           page={filters.page}
           pageSize={filters.pageSize}
-          total={totalData}
+          total={transactions?.totalCount ?? 0}
           onPageChange={filters.setPage}
           onPageSizeChange={filters.setPageSize}
         />
+
+        <TransactionDialogs dialogStates={dialogStates} onClose={closeDialog} />
       </div>
     </div>
   );

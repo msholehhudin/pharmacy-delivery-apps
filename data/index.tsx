@@ -64,7 +64,7 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
     },
     {
       title: "Transaction",
-      url: "/delivery",
+      url: "/transactions",
       icon: ArrowRightLeft,
     },
   ],

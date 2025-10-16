@@ -17,7 +17,9 @@ export interface Transaction {
     patientName: string
     patientAddress: string
     patientPhone: number
+    prescriptionDetails: string
     medicineItems: MedicineItems[]
+    type: string
     amount: number
     transactionDate: string
     courier: string
@@ -26,7 +28,9 @@ export interface Transaction {
     paymentMethod: String
     // fee:number
     notes?: string
-    createdBy: string;
+    createdBy: string
+    courierName: String
+    prescriptionCode: string
 }
 
 export interface CreateTransactionDTO {
@@ -48,17 +52,19 @@ export const formSchema = z.object({
     .min(1, "Phone is required")
     .regex(/^\d+$/, "Must be a number"),
   courier: z.string().min(1, "Courier is required"),
+  type: z.string().min(1, "Insert type of transaction"),
+  // status: z.string().min(1, "Status transaction is required"),
   prescriptionDetails: z.string().min(1, "Prescription details are required"),
   totalAmount: z
     .string()
     .min(1, "Total amount is required")
     .regex(/^\d+$/, "Must be a number"),
-  paymentMethod: z.enum(["cash", "transfer"], {
+  paymentMethod: z.enum(["cash", "bank_transfer", "credit_card", "debit_card"], {
     error: "Payment method is required.",
   }),
-  // status: z.enum(["pending", "on_delivery", "completed"], {
-  //   error: "Status is required",
-  // }),
+  status: z.enum(["pending", "on_delivery", "completed"], {
+    error: "Status is required",
+  }),
   notes: z.string().optional(),
 });
 
@@ -150,3 +156,7 @@ export const initialTransactionsDemo: TransactionDemoType[] = [
   },
 ];
 
+export interface TransactionQueryResult {
+  data: Transaction[]
+  totalCount: number
+}

@@ -1,3 +1,4 @@
+
 import {format} from 'date-fns'
 export const formatDateTime = (dateString:string) => {
     return format(new Date(dateString), 'dd MMM yyyy HH:mm')
@@ -18,3 +19,10 @@ export const getStatusColor = (status: string) => {
     }
   };
   
+export const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
