@@ -6,47 +6,61 @@ import { mapTransaction } from "@/utils/transaction.mapper";
 
 export class ClientTransactionRepo{
     async getTransaction(pagination: Pagination,  user?: {id:string, role: string}): Promise<TransactionQueryResult>{
-        const {data: {session}} = await supabase.auth.getSession()
-        if(!session) return { data: [],totalCount:0 }
+        try {
+            console.log("Repository: Starting query for user : ", user?.id)
 
-        // console.log('User auth context : ', user)
-        // Fetch user role 
-        // const {data: user} = await supabase
-        //     .from("users")
-        //     .select("role")
-        //     .eq("id", session.user.id)
+            const from = (pagination.page - 1) * pagination.pageSize
+            const to = from + pagination.pageSize - 1
 
-        const from = (pagination.page - 1) * pagination.pageSize
-        const to = from + pagination.pageSize - 1
+            let query = supabase
+                .from('transactions')
+                .select('*', {count: 'exact'})
+                .order('created_at', {ascending: false})
+                .range(from, to )
 
-        let query = supabase
-            .from('transactions')
-            .select('*', {count: 'exact'})
-            .order('created_at', {ascending: false})
-            .range(from, to )
+            const search = pagination.search?.trim()
+            if(search && search.length > 2){
+                query = query.ilike("patient_name", `%${pagination.search}%`)
+            }
 
-        const search = pagination.search?.trim()
-        if(search && search.length > 2){
-            query = query.ilike("patient_name", `%${pagination.search}%`)
-        }
+            if(pagination.status && pagination.status !== 'all'){
+                query = query.eq("status", pagination.status)
+            }
 
-        if(pagination.status && pagination.status !== 'all'){
-            query = query.eq("status", pagination.status)
-        }
-
-        if(user?.role == "courier"){
-            query = query.eq("courier_id", user.id)
-        }
+            if(user?.role == "courier"){
+                query = query.eq("courier_id", user.id)
+            }
         
-        const {data, count, error} = await query
-        if(error) throw error
+            console.time("supabase-query")
+            const {data, count, error} = await query
+            console.timeEnd("supabase-query")
 
-        console.log("pagination debug: ", {from,to, pageSize: pagination.pageSize, seaerch: pagination.search, returned: data?.length, totalCount: count})
+            if(error) {
+                if(error.code == "PGRST103"){
+                    console.warn("Supabase range exceeded total rows, returning empty result.")
+                    return {data: [], totalCount: count ?? 0}
+                }
+                console.error("Supabase query error : ", error)
+                throw error
+            }
 
-        return {
-            data: data?.map(mapTransaction) || [],
-            totalCount: count || 0,
-        } 
+              console.log("Repository: Query successful", {
+                from, to, 
+                returned: data?.length, 
+                totalCount: count
+            });
+
+            // console.log("pagination debug: ", {from,to, pageSize: pagination.pageSize, seaerch: pagination.search, returned: data?.length, totalCount: count})
+    
+            return {
+                data: data?.map(mapTransaction) || [],
+                totalCount: count || 0,
+            } 
+        } catch (error) {
+            console.error("Query failed: ", error)
+            // return { data: [], totalCount:0 }
+            throw error
+        }
         
     }
 

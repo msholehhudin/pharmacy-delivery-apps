@@ -56,7 +56,7 @@ export const LoginForm = ({
       // const response = await api.post("/auth/login", formData);
 
       const urlParams = new URLSearchParams(window.location.search);
-      const redirect = urlParams.get("redirect") || "/users";
+      const redirect = urlParams.get("redirect") || "/transactions";
       setIsLoading(false);
       router.push(redirect);
     } catch (err) {

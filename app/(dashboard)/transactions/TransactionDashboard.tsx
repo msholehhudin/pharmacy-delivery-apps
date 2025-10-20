@@ -9,6 +9,7 @@ import TransactionsTable from "@/components/PharmacyTransactions/TransactionsTab
 import { useAuth } from "@/context/AuthProvider";
 import useTransactionDialogs from "@/hooks/Transactions/useTransactionDialogs";
 import useTransactionFilters from "@/hooks/Transactions/useTransactionFilters";
+// import useTransactionRealtime from "@/hooks/Transactions/useTransactionRealtime";
 import useTransactions from "@/hooks/Transactions/useTransactions";
 
 const TransactionDashboard = () => {
@@ -25,8 +26,8 @@ const TransactionDashboard = () => {
   console.log("data transaction : ", isFetching);
 
   const { user } = useAuth();
-  // console.log("user di transaction dashboard :", user);
   const { dialogStates, openDialog, closeDialog } = useTransactionDialogs();
+  // useTransactionRealtime();
 
   // console.log("List Transactions : ", filteredTransaction);
   return (
