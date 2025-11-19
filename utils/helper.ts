@@ -18,6 +18,15 @@ export const getStatusColor = (status: string) => {
         return "bg-gray-100 text-gray-800";
     }
   };
+
+  export const changeText = (status: string) => {
+    switch (status) {
+      case "on_delivery":
+        return "On Delivery";
+      default:
+        return status
+    }
+  }
   
 export const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("id-ID", {

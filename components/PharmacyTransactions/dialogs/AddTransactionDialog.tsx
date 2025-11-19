@@ -11,7 +11,10 @@ import React from "react";
 import TransactionForm from "../forms/TransactionForm";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { formSchema, TransactionFormValues } from "@/types/transactions";
+import {
+  baseTransactionSchema,
+  TransactionFormValues,
+} from "@/types/transactions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddTransaction } from "@/hooks/Transactions/useAddTransaction";
 import { Loader2 } from "lucide-react";
@@ -27,7 +30,7 @@ const AddTransactionDialog = ({
   onOpenChange,
 }: AddTransactionDialogProps) => {
   const form = useForm<TransactionFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(baseTransactionSchema),
     defaultValues: {
       patientName: "",
       patientPhone: "",

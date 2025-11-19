@@ -17,12 +17,17 @@ const useTransactionFilters = () => {
         setStatusFilter(value)
         setPage(1)
     }
+
+    const updatePageSize = (value: number) => {
+        setPageSize(value)
+        setPage(1)
+    }
         
     return {
         page,
         setPage,
         pageSize,
-        setPageSize,
+        setPageSize: updatePageSize,
         search,
         setSearch: updateSeacrh,
         statusFilter,

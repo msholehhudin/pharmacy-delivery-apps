@@ -64,7 +64,11 @@ const TransactionForm = ({
                 <FormItem>
                   <FormLabel>Patient Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter patient phone..." {...field} />
+                    <Input
+                      type="number"
+                      placeholder="Enter patient phone..."
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,8 +125,8 @@ const TransactionForm = ({
                         <SelectValue placeholder="Choose Type..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Payment">Payment</SelectItem>
-                        <SelectItem value="Refund">Refund</SelectItem>
+                        <SelectItem value="payment">Payment</SelectItem>
+                        <SelectItem value="refund">Refund</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -238,7 +242,11 @@ const TransactionForm = ({
               <FormItem>
                 <FormLabel>Total Price</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter Price..." {...field} />
+                  <Input
+                    type="number"
+                    placeholder="Enter Price..."
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

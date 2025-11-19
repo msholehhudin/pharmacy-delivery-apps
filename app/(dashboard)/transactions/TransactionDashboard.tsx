@@ -11,6 +11,7 @@ import useTransactionDialogs from "@/hooks/Transactions/useTransactionDialogs";
 import useTransactionFilters from "@/hooks/Transactions/useTransactionFilters";
 // import useTransactionRealtime from "@/hooks/Transactions/useTransactionRealtime";
 import useTransactions from "@/hooks/Transactions/useTransactions";
+import { Transaction } from "@/types/transactions";
 
 const TransactionDashboard = () => {
   const filters = useTransactionFilters();
@@ -26,10 +27,15 @@ const TransactionDashboard = () => {
   console.log("data transaction : ", isFetching);
 
   const { user } = useAuth();
-  const { dialogStates, openDialog, closeDialog } = useTransactionDialogs();
+  const { dialogStates, openDialog, closeDialog, selectedTransaction } =
+    useTransactionDialogs();
   // useTransactionRealtime();
 
   // console.log("List Transactions : ", filteredTransaction);
+  const openEditDialog = (transactions: Transaction) => {
+    openDialog("edit", transactions);
+    console.log("edit data modal : ", transactions);
+  };
   return (
     <div className="min-h-screen">
       <div className="px-8 py-6">
@@ -50,6 +56,7 @@ const TransactionDashboard = () => {
           transactions={transactions?.data ?? []}
           isLoading={isLoading}
           isFetching={isFetching}
+          onEdit={openEditDialog}
         />
 
         <PaginationControls
@@ -60,7 +67,11 @@ const TransactionDashboard = () => {
           onPageSizeChange={filters.setPageSize}
         />
 
-        <TransactionDialogs dialogStates={dialogStates} onClose={closeDialog} />
+        <TransactionDialogs
+          dialogStates={dialogStates}
+          onClose={closeDialog}
+          selectedTransaction={selectedTransaction}
+        />
       </div>
     </div>
   );

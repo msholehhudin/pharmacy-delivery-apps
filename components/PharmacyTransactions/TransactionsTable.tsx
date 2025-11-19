@@ -14,7 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { formatCurrency, formatDateTime, getStatusColor } from "@/utils/helper";
+import {
+  changeText,
+  formatCurrency,
+  formatDateTime,
+  getStatusColor,
+} from "@/utils/helper";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,17 +29,23 @@ import {
 import { Button } from "../ui/button";
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import { Badge } from "../ui/badge";
+import {
+  getPaymentIcon,
+  getTransactionTypeIcon,
+} from "@/lib/utils/tableIcons/getIcon";
 
 interface TransactionTableProps {
   transactions: Transaction[];
   isLoading: boolean;
   isFetching: boolean;
+  onEdit: (transaction: Transaction) => void;
 }
 
 const TransactionsTable = ({
   transactions,
   isLoading,
   isFetching,
+  onEdit,
 }: TransactionTableProps) => {
   console.log("TransactionList on table : ", transactions);
   // console.log("TransactionList on isLoading : ", isLoading);
@@ -95,15 +106,33 @@ const TransactionsTable = ({
                     </div>
                     <div className="text-sm text-gray-500">Fee : Rp. 1000</div>
                   </TableCell>
-                  <TableCell>{transaction.status}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      {getTransactionTypeIcon(transaction.type)}
+                      <span className="capitalize">{transaction.type}</span>
+                    </div>
+                  </TableCell>
                   <TableCell>{transaction.prescriptionDetails}</TableCell>
                   <TableCell>
                     <Badge className={getStatusColor(transaction.status)}>
-                      {transaction.status}
+                      <span className="capitalize">
+                        {changeText(transaction.status)}
+                      </span>
                     </Badge>
                   </TableCell>
-                  <TableCell>{transaction.paymentMethod}</TableCell>
-                  <TableCell>{transaction.courierName}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      {getPaymentIcon(transaction.paymentMethod)}
+                      <span className="capitalize">
+                        {transaction.paymentMethod}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className="capitalize">
+                      {transaction.courierName}
+                    </span>
+                  </TableCell>
                   <TableCell>
                     {formatDateTime(transaction.transactionDate)}
                   </TableCell>
@@ -118,7 +147,7 @@ const TransactionsTable = ({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onEdit(transaction)}>
                           <Edit className="mr-2 h-4 w-4" />
                           Edit
                         </DropdownMenuItem>

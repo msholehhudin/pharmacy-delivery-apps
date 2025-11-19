@@ -13,7 +13,7 @@ export type TransactionStatus = 'pending' | 'on_delivery' | 'delivered' | 'cance
 export type PaymentStatus = 'unpaid' | 'paid' | 'cancelled'
 
 export interface Transaction {
-    id: number
+    id: string
     patientName: string
     patientAddress: string
     patientPhone: number
@@ -25,11 +25,11 @@ export interface Transaction {
     courier: string
     status: TransactionStatus
     // paymentStatus: PaymentStatus
-    paymentMethod: String
+    paymentMethod: string
     // fee:number
     notes?: string
     createdBy: string
-    courierName: String
+    courierName: string
     prescriptionCode: string
 }
 
@@ -44,21 +44,19 @@ export interface CreateTransactionDTO {
     note?: string
 }
 
-export const formSchema = z.object({
+export const baseTransactionSchema = z.object({
   patientName: z.string().min(1, "Patient name is required"),
   patientAddress: z.string().min(1, "Address is required"),
   patientPhone: z
     .string()
-    .min(1, "Phone is required")
-    .regex(/^\d+$/, "Must be a number"),
+    .min(1, 'Phone is required'),
   courier: z.string().min(1, "Courier is required"),
   type: z.string().min(1, "Insert type of transaction"),
   // status: z.string().min(1, "Status transaction is required"),
   prescriptionDetails: z.string().min(1, "Prescription details are required"),
   totalAmount: z
     .string()
-    .min(1, "Total amount is required")
-    .regex(/^\d+$/, "Must be a number"),
+    .min(1, 'Total amount is required'),
   paymentMethod: z.enum(["cash", "bank_transfer", "credit_card", "debit_card"], {
     error: "Payment method is required.",
   }),
@@ -68,7 +66,13 @@ export const formSchema = z.object({
   notes: z.string().optional(),
 });
 
-export type TransactionFormValues = z.infer<typeof formSchema>;
+export const createTransactionForm = baseTransactionSchema
+export type TransactionFormValues = z.infer<typeof createTransactionForm>;
+
+export const updateTransactionForm = baseTransactionSchema.partial().extend({
+  id: z.string().min(1, "ID is required for updates")
+})
+export type UpdateTransactionValues = z.infer<typeof updateTransactionForm>
 
 
 // DEMO
