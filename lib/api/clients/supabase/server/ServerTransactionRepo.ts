@@ -9,8 +9,8 @@ export class ServerTransactionRepo{
     async createTransaction(values: TransactionFormValues): Promise<Transaction>{
 
         const supabase = await createServer()
-        const {data: {session}} = await supabase.auth.getSession()
-        if(!session) throw new Error('Not Authenticated!')
+        const {data: {user}, error: userError} = await supabase.auth.getUser()
+        if(userError || !user) throw new Error('Not Authenticated!')
 
         const insertData = {
             patient_name: values.patientName,
@@ -22,7 +22,7 @@ export class ServerTransactionRepo{
             payment_method: values.paymentMethod,
             status: 'pending',
             notes: values.notes || null,
-            created_by: session.user.id,
+            created_by: user.id,
             prescription_code: generateTransactionCode(),
             type: values.type
         }
@@ -156,5 +156,18 @@ export class ServerTransactionRepo{
         }
 
         return data[0]
+    }
+
+    async getTransactionById(id: string): Promise<Transaction>{
+        const supabase = await createServer()
+
+        const {data, error} = await supabase
+            .from('transaction')
+            .select('*')
+            .eq('id', id)
+            .single()
+
+        if(error) throw error
+        return data
     }
 }
