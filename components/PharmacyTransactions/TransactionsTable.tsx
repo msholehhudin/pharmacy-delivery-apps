@@ -33,6 +33,7 @@ import {
   getPaymentIcon,
   getTransactionTypeIcon,
 } from "@/lib/utils/tableIcons/getIcon";
+import { useAuth } from "@/context/AuthProvider";
 
 interface TransactionTableProps {
   transactions: Transaction[];
@@ -47,7 +48,11 @@ const TransactionsTable = ({
   isFetching,
   onEdit,
 }: TransactionTableProps) => {
-  console.log("TransactionList on table : ", transactions);
+  const { user } = useAuth();
+  const userRole = user?.role;
+
+  // console.log("ini user role di transaction table : ", userRole);
+  // console.log("TransactionList on table : ", transactions);
   // console.log("TransactionList on isLoading : ", isLoading);
   return (
     <Card>
@@ -147,14 +152,28 @@ const TransactionsTable = ({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => onEdit(transaction)}>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
+                        {userRole && userRole === "courier" ? (
+                          <>
+                            <DropdownMenuItem className="hover:cursor-pointer">
+                              <Edit className="mr-2 h-4 w-4" />
+                              Update Status
+                            </DropdownMenuItem>
+                          </>
+                        ) : (
+                          <>
+                            <DropdownMenuItem
+                              onClick={() => onEdit(transaction)}
+                              className="hover:cursor-pointer"
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-600 hover:cursor-pointer">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

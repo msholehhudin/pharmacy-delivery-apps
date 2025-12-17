@@ -22,6 +22,7 @@ import { TransactionFormValues } from "@/types/transactions";
 import { cn } from "@/lib/utils";
 import { useCouriers } from "@/hooks/Users/useUsers";
 import { Loader2 } from "lucide-react";
+import { formatCurrency } from "@/lib/utils/formatters/currency";
 
 const TransactionForm = ({
   form,
@@ -243,9 +244,14 @@ const TransactionForm = ({
                 <FormLabel>Total Price</FormLabel>
                 <FormControl>
                   <Input
-                    type="number"
+                    type="numeric"
                     placeholder="Enter Price..."
-                    {...field}
+                    // {...field}
+                    value={formatCurrency(field.value || "")}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, "");
+                      field.onChange(raw);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

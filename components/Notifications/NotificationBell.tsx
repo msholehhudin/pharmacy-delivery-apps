@@ -110,7 +110,8 @@ const NotificationBell = () => {
                   }
                   className={cn(
                     "p-4 hover:bg-accent dark:hover:bg-white/10 cursor-pointer transition-colors",
-                    !notification.is_read && "bg-blue-50/50 dark:bg-blue-950/20"
+                    !notification.is_read &&
+                      "bg-blue-300/30 dark:bg-blue-950/70"
                   )}
                 >
                   <div className="flex items-start gap-3">
