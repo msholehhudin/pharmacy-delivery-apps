@@ -36,6 +36,11 @@ const TransactionDashboard = () => {
     openDialog("edit", transactions);
     console.log("edit data modal : ", transactions);
   };
+
+  const openUpdateDialog = (transactions: Transaction) => {
+    openDialog("updateStatus", transactions);
+  };
+
   return (
     <div className="min-h-screen">
       <div className="px-8 py-6">
@@ -57,6 +62,7 @@ const TransactionDashboard = () => {
           isLoading={isLoading}
           isFetching={isFetching}
           onEdit={openEditDialog}
+          onUpdateStatus={openUpdateDialog}
         />
 
         <PaginationControls

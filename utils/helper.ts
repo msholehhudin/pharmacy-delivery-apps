@@ -19,7 +19,7 @@ export const getStatusColor = (status: string) => {
     }
   };
 
-  export const changeText = (status: string) => {
+  export const changeText = (status?: string) => {
     switch (status) {
       case "on_delivery":
         return "On Delivery";

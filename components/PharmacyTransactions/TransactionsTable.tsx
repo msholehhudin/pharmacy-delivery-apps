@@ -40,6 +40,7 @@ interface TransactionTableProps {
   isLoading: boolean;
   isFetching: boolean;
   onEdit: (transaction: Transaction) => void;
+  onUpdateStatus: (transaction: Transaction) => void;
 }
 
 const TransactionsTable = ({
@@ -47,6 +48,7 @@ const TransactionsTable = ({
   isLoading,
   isFetching,
   onEdit,
+  onUpdateStatus,
 }: TransactionTableProps) => {
   const { user } = useAuth();
   const userRole = user?.role;
@@ -154,7 +156,10 @@ const TransactionsTable = ({
                       <DropdownMenuContent>
                         {userRole && userRole === "courier" ? (
                           <>
-                            <DropdownMenuItem className="hover:cursor-pointer">
+                            <DropdownMenuItem
+                              className="hover:cursor-pointer"
+                              onClick={() => onUpdateStatus(transaction)}
+                            >
                               <Edit className="mr-2 h-4 w-4" />
                               Update Status
                             </DropdownMenuItem>
