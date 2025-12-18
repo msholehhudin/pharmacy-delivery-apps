@@ -95,8 +95,8 @@ export default function TransactionDemo() {
     notes: "",
   });
 
-  const fetchingData = useTransactions();
-  console.log("fetching on client component : ", fetchingData);
+  // const fetchingData = useTransactions();
+  // console.log("fetching on client component : ", fetchingData);
 
   const filteredTransactions = transactions.filter((transaction) => {
     const matchesSearch =
