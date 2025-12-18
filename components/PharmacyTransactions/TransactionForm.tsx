@@ -24,42 +24,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { createTransaction } from "@/lib/api/transactions/actions";
 import { useRouter } from "next/navigation";
+import { formSchema, TransactionFormValues } from "@/types/transactions";
 
-const supabase = createClient();
+// const supabase = createClient();
 // const router = useRouter();
 
 const courier = [
   { id: "1", name: "Courier 1" },
   { id: "2", name: "Courier 2" },
 ];
-
-const formSchema = z.object({
-  patientName: z.string().min(1, "Patient name is required"),
-  patientAddress: z.string().min(1, "Address is required"),
-  patientPhone: z
-    .string()
-    .min(1, "Phone is required")
-    .regex(/^\d+$/, "Must be a number"),
-  courier: z.string().min(1, "Courier is required"),
-  prescriptionDetails: z.string().min(1, "Prescription details are required"),
-  totalAmount: z
-    .string()
-    .min(1, "Total amount is required")
-    .regex(/^\d+$/, "Must be a number"),
-  paymentMethod: z.enum(["cash", "transfer"], {
-    error: "Payment method is required.",
-  }),
-  // status: z.enum(["pending", "on_delivery", "completed"], {
-  //   error: "Status is required",
-  // }),
-  notes: z.string().optional(),
-});
-
-export type TransactionFormValues = z.infer<typeof formSchema>;
 
 const handleSubmit = async (values: TransactionFormValues) => {
   console.log("Submit value : ", values);
@@ -277,7 +253,7 @@ const TransactionForm = () => {
             </FormItem>
           )}
         />
-        <div className="flex justify-end gap-3 mt-8">
+        {/* <div className="flex justify-end gap-3 mt-8">
           <AlertDialogCancel asChild>
             <Button variant={"outline"} className="cursor-pointer">
               Cancel
@@ -286,7 +262,7 @@ const TransactionForm = () => {
           <Button type="submit" className="cursor-pointer">
             Submit
           </Button>
-        </div>
+        </div> */}
       </form>
     </Form>
   );

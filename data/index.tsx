@@ -57,14 +57,14 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
     },
   ],
   courier: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: Home,
-    },
+    // {
+    //   title: "Dashboard",
+    //   url: "/dashboard",
+    //   icon: Home,
+    // },
     {
       title: "Transaction",
-      url: "/delivery",
+      url: "/transactions",
       icon: ArrowRightLeft,
     },
   ],
