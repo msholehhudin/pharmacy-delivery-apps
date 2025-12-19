@@ -1,9 +1,11 @@
 "use client"
-import { createClient } from "@/lib/supabase/client";
+
+import { supabase } from "@/lib/supabase/client"
+
 
 export const getClientTransactions = async() => {
     try{
-        const supabase = createClient()
+        // const supabase = createClient()
 
         const {data: {session}} = await supabase.auth.getSession()
 

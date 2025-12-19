@@ -1,7 +1,8 @@
 'use server'
 
-import { TransactionFormValues } from "@/components/PharmacyTransactions/TransactionForm"
+// import { TransactionFormValues } from "@/components/PharmacyTransactions/TransactionForm"
 import { createServer } from "@/lib/supabase/server"
+import { TransactionFormValues } from "@/types/transactions";
 
 export const createTransaction = async(values: TransactionFormValues) => {
     const supabase = await createServer()

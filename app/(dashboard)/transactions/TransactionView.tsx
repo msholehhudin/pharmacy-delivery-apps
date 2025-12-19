@@ -1,7 +1,7 @@
 "use client";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
-import { transactions } from "@/data";
+// import { transactions } from "@/data";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import {
