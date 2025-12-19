@@ -15,17 +15,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import TransactionForm, {
-  TransactionFormValues,
-} from "@/components/PharmacyTransactions/TransactionForm";
+// import TransactionForm, {
+//   TransactionFormValues,
+// } from "@/components/PharmacyTransactions/TransactionForm";
 import { Transaction } from "@/types/transactions";
 import useTransactions from "@/hooks/Transactions/useTransactions";
 
 const TransactionView = ({ initialData }: { initialData: Transaction[] }) => {
-  const { data, isLoading, isError } = useTransactions(initialData);
+  // const { data, isLoading, isError } = useTransactions(initialData);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading transactions</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  // if (isError) return <div>Error loading transactions</div>;
   // console.log("ini data fetching initial data :", initialData);
   return (
     <div className="container mx-auto py-10">
@@ -48,7 +48,7 @@ const TransactionView = ({ initialData }: { initialData: Transaction[] }) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             */}
-            <TransactionForm />
+            {/* <TransactionForm /> */}
             {/* <AlertDialogFooter className="mt-9">
               <AlertDialogCancel className="cursor-pointer">
                 Cancel
@@ -58,7 +58,7 @@ const TransactionView = ({ initialData }: { initialData: Transaction[] }) => {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-      <DataTable columns={columns} data={data || []} />
+      {/* <DataTable columns={columns} data={data || []} /> */}
     </div>
   );
 };
