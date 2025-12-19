@@ -13,7 +13,14 @@ export const GET = async(request: NextRequest) => {
         const {searchParams} = new URL(request.url)
         const limit = parseInt(searchParams.get('limit') || '50')
 
-        const notifications = await serverRepositories.notifications.createMultiple(user.id, limit)
+        const notifications = await serverRepositories.notifications.createMultiple([{
+            user_id: user.id,
+            title: "Notification",
+            message: "",
+            type: "assignment",
+            related_entity_type: 'transaction',
+            related_entity_id: '',
+        }])
 
         return NextResponse.json(notifications)
     } catch (error) {

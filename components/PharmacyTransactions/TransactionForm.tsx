@@ -27,7 +27,7 @@ import {
 import { toast } from "sonner";
 import { createTransaction } from "@/lib/api/transactions/actions";
 import { useRouter } from "next/navigation";
-import { formSchema, TransactionFormValues } from "@/types/transactions";
+import { TransactionFormValues } from "@/types/transactions";
 
 // const supabase = createClient();
 // const router = useRouter();
@@ -80,7 +80,7 @@ const handleSubmit = async (values: TransactionFormValues) => {
 
 const TransactionForm = () => {
   const form = useForm<TransactionFormValues>({
-    resolver: zodResolver(formSchema),
+    // resolver: zodResolver(formSche),
     defaultValues: {
       patientName: "",
       courier: "",

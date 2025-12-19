@@ -1,4 +1,4 @@
-export const UserRoles = ["courier", "pharmacy_staff", "pharmacy_super_admin"] as const
+export const UserRoles = ["courier", "pharmacy_staff", "pharmacy_super_admin", "pharmacy_apoteker"] as const
 export type UserRole = typeof UserRoles[number]
 
 // export interface User {
@@ -16,7 +16,7 @@ export interface User {
     name: string;
     email: string;
     phone: string;
-    role: string;
+    role: UserRole;
     status: "active" | "inactive";
     avatar: string;
     created_at: string;

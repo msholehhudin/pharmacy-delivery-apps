@@ -59,7 +59,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "created_at",
     header: "Delivery Date",
-    cell: ({ row }) => <span>{formatDateTime(row.original.created_at)}</span>,
+    // cell: ({ row }) => <span>{formatDateTime(row.original.created_at)}</span>,
   },
   {
     accessorKey: "courier_id",
@@ -88,14 +88,14 @@ export const columns: ColumnDef<Transaction>[] = [
     header: "Payment Status",
     cell: ({ row }) => (
       <Badge
-        variant={`${
-          row.original.payment_status == "paid" ? "secondary" : "destructive"
-        }`}
-        className={`${
-          row.original.payment_status == "paid" ? "bg-green-700 text-white" : ""
-        }`}
+      // variant={`${
+      //   row.original.payment_status == "paid" ? "secondary" : "destructive"
+      // }`}
+      // className={`${
+      //   row.original.payment_status == "paid" ? "bg-green-700 text-white" : ""
+      // }`}
       >
-        {row.original.payment_status}
+        {/* {row.original.payment_status} */}
       </Badge>
     ),
   },

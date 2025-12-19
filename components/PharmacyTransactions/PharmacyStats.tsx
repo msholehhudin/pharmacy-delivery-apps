@@ -1,7 +1,6 @@
 import { Transaction } from "@/types/transactions";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Calendar, Pill, TrendingUp } from "lucide-react";
-import { formatCurrency } from "@/lib/utils/transactions/currency";
 
 interface PharmacyStatsProps {
   transactions: Transaction[];
