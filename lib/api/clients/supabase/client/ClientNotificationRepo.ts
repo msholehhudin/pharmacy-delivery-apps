@@ -11,7 +11,8 @@ type QueryOptions = {
 export class ClientNotificationRepo{
     async findByUserId(options?: QueryOptions): Promise<Notification[]> {
             const {data: {session}, error:userError} = await supabase.auth.getSession()
-            if(!session || userError) throw new Error('Not Authenticated!')
+            // if(!session || userError) throw new Error('Not Authenticated!')
+            if(!session) return []
 
                 // console.log('Repo Client : ', session)
 

@@ -18,7 +18,8 @@ type AuthContextType = {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  // logout: () => Promise<void>;
+  logout: () => void;
   resetPassword: (email: string) => Promise<void>;
   loadingLogout: boolean;
 };
@@ -125,35 +126,46 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     [getSession]
   );
 
-  const logout = useCallback(async () => {
+  // const logout = useCallback(async () => {
+  //   setLogoutLoading(true);
+  //   try {
+  //     console.log("1. Starting Logout...");
+
+  //     const { error } = await supabase.auth.signOut();
+
+  //     if (error) {
+  //       console.error("Supabase signOut error:", error);
+  //       setError(error.message);
+  //       return;
+  //     }
+
+  //     await new Promise((res) => setTimeout(res, 1000));
+  //     console.log("2. SignOut successful");
+  //     setUser(null);
+  //     console.log("3. User cleared");
+
+  //     // router.refresh();
+  //     // router.push("/login");
+  //     window.location.replace("/login");
+  //     console.log("4. Navigation triggered");
+  //   } catch (err) {
+  //     setError("Logout failed. Please try again.");
+  //     console.error("Unexpected logout error: ", err);
+  //   } finally {
+  //     setLogoutLoading(false);
+  //   }
+  // }, []);
+
+  const logout = () => {
     setLogoutLoading(true);
-    try {
-      console.log("1. Starting Logout...");
-
-      const { error } = await supabase.auth.signOut();
-
-      if (error) {
-        console.error("Supabase signOut error:", error);
-        setError(error.message);
-        return;
-      }
-
-      await new Promise((res) => setTimeout(res, 1000));
-      console.log("2. SignOut successful");
-      setUser(null);
-      console.log("3. User cleared");
-
-      // router.refresh();
-      // router.push("/login");
-      window.location.replace("/login");
-      console.log("4. Navigation triggered");
-    } catch (err) {
-      setError("Logout failed. Please try again.");
-      console.error("Unexpected logout error: ", err);
-    } finally {
-      setLogoutLoading(false);
-    }
-  }, []);
+    setUser(null);
+    fetch("/api/users/logout", {
+      method: "POST",
+      credentials: "include",
+    }).finally(() => {
+      window.location.href = "/login";
+    });
+  };
 
   const resetPassword = useCallback(async (email: string) => {
     try {
