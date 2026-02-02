@@ -3,12 +3,14 @@ import AddTransactionDialog from "./dialogs/AddTransactionDialog";
 import { Transaction } from "@/types/transactions";
 import EditTransactionDialog from "./dialogs/EditTransactionDialog";
 import CourierStatusDialog from "./dialogs/CourierStatusDialog";
+import PrintTransactionDialog from "./dialogs/PrintTransactionDialog";
 
 interface DialogStates {
   add: boolean;
   edit: boolean;
   delete: boolean;
   updateStatus: boolean;
+  print: boolean;
 }
 
 interface TransactionDialogProps {
@@ -39,6 +41,12 @@ const TransactionDialogs = ({
       <CourierStatusDialog
         open={dialogStates.updateStatus}
         onOpenChange={() => onClose("updateStatus")}
+        transaction={selectedTransaction}
+      />
+
+      <PrintTransactionDialog
+        open={dialogStates.print}
+        onOpenChange={() => onClose("print")}
         transaction={selectedTransaction}
       />
     </>

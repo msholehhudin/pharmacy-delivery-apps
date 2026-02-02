@@ -24,7 +24,8 @@ import { usePathname } from "next/navigation";
 const AppSidebar = () => {
   const { user } = useAuth();
   const userRole = user?.role;
-  // console.log("ini user role : ", userRole);
+  // const userCheck = user
+  // console.log("ini user role : ", user);
   const pathname = usePathname();
 
   if (!userRole) return null;

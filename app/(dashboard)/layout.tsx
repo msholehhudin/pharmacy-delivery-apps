@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }: any) {
     <SidebarProvider>
       <AppSidebar />
       <Toaster />
-      <main className="w-full p-4">
+      <main className="w-full p-4 overflow-hidden">
         <Navbar />
         {children}
       </main>

@@ -34,11 +34,15 @@ const TransactionDashboard = () => {
   // console.log("List Transactions : ", filteredTransaction);
   const openEditDialog = (transactions: Transaction) => {
     openDialog("edit", transactions);
-    console.log("edit data modal : ", transactions);
+    // console.log("edit data modal : ", transactions);
   };
 
   const openUpdateDialog = (transactions: Transaction) => {
     openDialog("updateStatus", transactions);
+  };
+
+  const openPrintDialog = (transactions: Transaction) => {
+    openDialog("print", transactions);
   };
 
   return (
@@ -63,6 +67,7 @@ const TransactionDashboard = () => {
           isFetching={isFetching}
           onEdit={openEditDialog}
           onUpdateStatus={openUpdateDialog}
+          onPrint={openPrintDialog}
         />
 
         <PaginationControls

@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import { Edit, MoreHorizontal, Printer, Trash2 } from "lucide-react";
 import { Badge } from "../ui/badge";
 import {
   getPaymentIcon,
@@ -41,6 +41,7 @@ interface TransactionTableProps {
   isFetching: boolean;
   onEdit: (transaction: Transaction) => void;
   onUpdateStatus: (transaction: Transaction) => void;
+  onPrint: (transaction: Transaction) => void;
 }
 
 const TransactionsTable = ({
@@ -49,6 +50,7 @@ const TransactionsTable = ({
   isFetching,
   onEdit,
   onUpdateStatus,
+  onPrint,
 }: TransactionTableProps) => {
   const { user } = useAuth();
   const userRole = user?.role;
@@ -172,6 +174,13 @@ const TransactionsTable = ({
                             >
                               <Edit className="mr-2 h-4 w-4" />
                               Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => onPrint(transaction)}
+                              className="hover:cursor-pointer"
+                            >
+                              <Printer className="mr-2 h-4 w-4" />
+                              Print
                             </DropdownMenuItem>
                             <DropdownMenuItem className="text-red-600 hover:cursor-pointer">
                               <Trash2 className="mr-2 h-4 w-4" />

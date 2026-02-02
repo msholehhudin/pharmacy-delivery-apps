@@ -12,7 +12,8 @@ const useTransactionDialogs = () => {
         add: false,
         edit: false,
         delete: false,
-        updateStatus: false
+        updateStatus: false,
+        print: false
     })
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
 
