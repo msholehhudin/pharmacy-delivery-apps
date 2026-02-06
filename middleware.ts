@@ -4,12 +4,27 @@ import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
   console.log('Path:', request.nextUrl.pathname)
-  
-  // Handle root redirect
-  if (request.nextUrl.pathname === '/') {
-    console.log('Redirecting to /id')
+  const {pathname} = request.nextUrl
+
+   // Handle root redirect
+  if (pathname === '/') {
+    console.log('Redirecting root to /id')
     return NextResponse.redirect(new URL('/id', request.url))
   }
+
+  const segments = pathname.split('/')
+  const locale = segments[1]
+  const route = segments[2]
+  
+   // Only handle locale route
+  if(!['id', 'en'].includes(locale)){
+    return NextResponse.next()
+  }
+
+  // Public routes
+  // if(!route || route == 'login'){
+  //   return NextResponse.next()
+  // }
   
   // Handle Supabase auth
   const response = NextResponse.next()
@@ -29,7 +44,45 @@ export async function middleware(request: NextRequest) {
     }
   )
   
-  await supabase.auth.getUser()
+  const {data: {session},} = await supabase.auth.getSession()
+
+  const authRedirectsRoutes = ['login', 'register']
+
+  // No auth required
+  const publicRoute = [...authRedirectsRoutes, 'forgot-password', 'reset-password']
+
+  const isAuthRedirectRoute = authRedirectsRoutes.includes(route || '')
+  const isPublicRoute = !route || publicRoute.includes(route)
+
+  if(!route){
+    if(!session){
+      console.log("No session on homepage, redirecting to login")
+      return NextResponse.redirect(new URL(`/${locale}/login`, request.url))
+    }else{
+      console.log("Has homepage, redirecting to home")
+      return NextResponse.redirect(new URL(`/${locale}/home`, request.url))
+    }
+  }
+
+  // if user is not authenticated
+  if(!session && !isPublicRoute){
+    console.log("Redirecting to the login page")
+    return NextResponse.redirect(new URL(`/${locale}/login`, request.url))
+  }
+
+  if(session && isAuthRedirectRoute){
+    console.log("Has session but wanna access login page")
+    return NextResponse.redirect(new URL(`/${locale}/home`, request.url))
+  }
+
+  console.log("Session on middleware : ", session)
+
+  // Public routes
+  // if(!route || route == 'login'){
+  //   return NextResponse.next()
+  // }
+  
+  // await supabase.auth.getUser()
   return response
 }
 

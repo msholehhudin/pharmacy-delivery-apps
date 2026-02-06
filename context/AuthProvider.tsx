@@ -34,6 +34,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const router = useRouter();
 
+  const getLocaleFromPath = () => {
+    if (typeof window === "undefined") return "id";
+    return window.location.pathname.split("/")[1] || "id";
+  };
+
   const getSession = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -172,11 +177,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = () => {
     setLogoutLoading(true);
     setUser(null);
+
+    const locale = getLocaleFromPath();
+
     fetch("/api/users/logout", {
       method: "POST",
       credentials: "include",
     }).finally(() => {
-      window.location.href = "/login";
+      window.location.href = `${locale}/login`;
     });
   };
 
