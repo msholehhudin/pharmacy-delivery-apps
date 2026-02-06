@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import api from "@/lib/axios";
 import { useAuth } from "@/context/AuthProvider";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type FormData = {
   email: string;
@@ -34,6 +35,12 @@ export const LoginForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
 
+  const t = useTranslations("Auth");
+  const params = useParams();
+  const searchParams = useSearchParams();
+
+  const redirectTo = searchParams.get("redirect") || "transactions";
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -55,12 +62,19 @@ export const LoginForm = ({
       // const cookies = await api.get("/sanctum/csrf-cookie");
       // const response = await api.post("/auth/login", formData);
 
-      const urlParams = new URLSearchParams(window.location.search);
-      const redirect = urlParams.get("redirect") || "/users";
+      const locale = params.locale as string;
+      console.log("locale from params : ", locale);
+
+      // const urlParams = new URLSearchParams(window.location.search);
+      const redirect = `/${locale}/${redirectTo}`;
+      console.log("redirect path : ", redirect);
+      setIsLoading(false);
       router.push(redirect);
     } catch (err) {
       console.error("Error Login : ", err);
       setError("Invalid Credentials. Please try again.");
+
+      setIsLoading(false);
     }
   };
 
@@ -79,14 +93,14 @@ export const LoginForm = ({
       onSubmit={handleSubmitForm}
     >
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Login to your account</h1>
+        <h1 className="text-2xl font-bold">{t("loginTitle")}</h1>
         <p className="text-muted-foreground text-sm text-balance">
-          Enter your email below to login to your account
+          {t("loginDescription")}
         </p>
       </div>
       <div className="grid gap-6">
         <div className="grid gap-3">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t("email")}</Label>
           <Input
             id="email"
             type="email"
@@ -99,12 +113,12 @@ export const LoginForm = ({
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("password")}</Label>
             <a
               href="#"
               className="ml-auto text-sm underline-offset-4 hover:underline"
             >
-              Forgot your password?
+              {t("forgotPassword")}
             </a>
           </div>
           <Input
@@ -120,10 +134,10 @@ export const LoginForm = ({
           {isLoading ? (
             <>
               <Loader2 className="animate-spin mr-2" />
-              Loading...
+              {t("loading")}
             </>
           ) : (
-            "Login"
+            t("login")
           )}
         </Button>
         {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
@@ -142,9 +156,9 @@ export const LoginForm = ({
         </Button> */}
       </div>
       <div className="text-center text-sm">
-        Don&apos;t have an account?{" "}
+        {t("noAccount")}
         <a href="#" className="underline underline-offset-4">
-          Contact your Administrator
+          {t("contactAdmin")}
         </a>
       </div>
     </form>

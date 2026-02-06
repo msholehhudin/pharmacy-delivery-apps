@@ -1,0 +1,18 @@
+
+{
+  "Home": {
+    "title": "Selamat Datang di MediXpress",
+    "description": "Aplikasi pengiriman obat terpercaya"
+  },
+  "Auth": {
+    "loginTitle": "Masuk ke akun Anda",
+    "loginDescription": "Masukkan email dan password Anda untuk masuk",
+    "email": "Email",
+    "password": "Kata Sandi",
+    "forgotPassword": "Lupa kata sandi?",
+    "loading": "Memuat...",
+    "login": "Masuk",
+    "noAccount": "Tidak punya akun? ",
+    "contactAdmin": "Hubungi Administrator"
+  }
+}

@@ -24,7 +24,8 @@ import { usePathname } from "next/navigation";
 const AppSidebar = () => {
   const { user } = useAuth();
   const userRole = user?.role;
-  console.log("ini user role : ", userRole);
+  // const userCheck = user
+  // console.log("ini user role : ", user);
   const pathname = usePathname();
 
   if (!userRole) return null;
@@ -51,7 +52,7 @@ const AppSidebar = () => {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => {
+              {items.map((item: any) => {
                 const isActive = pathname.startsWith(item.url);
                 return (
                   <SidebarMenuItem key={item.title}>
@@ -63,7 +64,7 @@ const AppSidebar = () => {
                           : "hover:bg-muted"
                       } transition-colors`}
                     >
-                      <Link href={item.url}>
+                      <Link href={item.url} prefetch>
                         <item.icon />
                         <span>{item.title}</span>
                       </Link>

@@ -1,0 +1,17 @@
+{
+  "Home": {
+    "title": "Welcome to MediXpress",
+    "description": "Trusted medicine delivery app"
+  },
+  "Auth": {
+    "loginTitle": "Login to your account",
+    "loginDescription": "Enter your email below to login to your account",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "loading": "Loading...",
+    "login": "Login",
+    "noAccount": "Don't have an account?",
+    "contactAdmin": "Contact your Administrator"
+  }
+}

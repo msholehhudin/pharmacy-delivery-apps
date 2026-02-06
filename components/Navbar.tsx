@@ -16,6 +16,8 @@ import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useAuth } from "@/context/AuthProvider";
+import NotificationBell from "./Notifications/NotificationBell";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const { setTheme } = useTheme();
@@ -28,13 +30,14 @@ const Navbar = () => {
       {/* RIGHT */}
       <div className="flex items-center gap-4">
         {/* <Link href={"/"}>Dashboard</Link> */}
-        <div className="p-2 rounded-sm hover:cursor-pointer dark:hover:bg-slate-900">
-          <Bell />
-        </div>
 
-        <DropdownMenu>
+        <NotificationBell />
+
+        <ThemeToggle />
+
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size={"icon"} className="cursor-pointer">
+            <Button variant="ghost" size={"icon"} className="cursor-pointer">
               <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
               <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
               <span className="sr-only">Toggle theme</span>
@@ -60,7 +63,7 @@ const Navbar = () => {
               System
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
 
         <DropdownMenu>
           <DropdownMenuTrigger>
