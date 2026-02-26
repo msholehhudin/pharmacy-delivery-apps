@@ -170,4 +170,22 @@ export class ServerTransactionRepo{
         if(error) throw error
         return data
     }
+
+    async getTransactionByMonth(startDate: string,endDate: string){
+        const supabase = await createServer()
+
+        const {data, error} = await supabase
+                .from('transaction')
+                .select(
+                    `
+                    total_amount,
+                    status,
+                    `
+                )
+                .gte('created_at', startDate)
+                .lt('created_at', endDate)
+
+        if(error) throw error
+        return data
+    }
 }

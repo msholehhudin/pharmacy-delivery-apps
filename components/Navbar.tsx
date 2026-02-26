@@ -18,10 +18,12 @@ import { SidebarTrigger } from "./ui/sidebar";
 import { useAuth } from "@/context/AuthProvider";
 import NotificationBell from "./Notifications/NotificationBell";
 import ThemeToggle from "./ThemeToggle";
+import { useTranslations } from "next-intl";
 
 const Navbar = () => {
   const { setTheme } = useTheme();
   const { logout } = useAuth();
+  const t = useTranslations("Navbar");
 
   return (
     <nav className="flex items-center justify-between">
@@ -73,15 +75,15 @@ const Navbar = () => {
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent sideOffset={10} className="mr-4">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>{t("myAccount")}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer">
               <User className="h-[1.2rem] w-[1.2rem] mr-2" />
-              Profile
+              {t("profile")}
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
               <Settings className="h-[1.2rem] w-[1.2rem] mr-2" />
-              Settings
+              {t("setting")}
             </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"
@@ -89,7 +91,7 @@ const Navbar = () => {
               onClick={logout}
             >
               <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
-              Logout
+              {t("logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

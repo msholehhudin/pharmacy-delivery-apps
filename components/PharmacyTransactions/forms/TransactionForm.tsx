@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { useCouriers } from "@/hooks/Users/useUsers";
 import { Loader2 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils/formatters/currency";
+import { useTranslations } from "next-intl";
 
 const TransactionForm = ({
   form,
@@ -33,11 +34,13 @@ const TransactionForm = ({
   console.log("data courier : ", couriers);
   console.log("isLoading courier : ", isLoading);
 
+  const t = useTranslations("AddTransactionDialog");
+
   return (
     <>
       {/* Patient Information */}
       <div className="">
-        <h4 className="font-medium">Patient Information</h4>
+        <h4 className="font-medium">{t("patientInformation")}</h4>
         <hr className="mb-4" />
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -46,9 +49,12 @@ const TransactionForm = ({
               name="patientName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Patient Name</FormLabel>
+                  <FormLabel>{t("patientName")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Patient Name..." {...field} />
+                    <Input
+                      placeholder={t("patientNamePlaceholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -63,11 +69,11 @@ const TransactionForm = ({
               name="patientPhone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Patient Phone</FormLabel>
+                  <FormLabel>{t("patientPhone")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Enter patient phone..."
+                      placeholder={t("patientPhonePlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -83,11 +89,11 @@ const TransactionForm = ({
             name="patientAddress"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Patient Address</FormLabel>
+                <FormLabel>{t("patientAddress")}</FormLabel>
                 <FormControl>
                   <Textarea
                     id="notes"
-                    placeholder="Enter patient address..."
+                    placeholder={t("patientAddressPlaceholder")}
                     rows={3}
                     {...field}
                   />
@@ -101,16 +107,16 @@ const TransactionForm = ({
 
       {/* Transaction Details */}
       <div className="mt-6">
-        <h4 className="font-medium">Transaction Details</h4>
+        <h4 className="font-medium">{t("transactionDetails")}</h4>
         <hr className="mb-4" />
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <FormField
               name="type"
               control={form.control}
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Transaction Type</FormLabel>
+                  <FormLabel>{t("transactionType")}</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -120,7 +126,7 @@ const TransactionForm = ({
                         className={cn(
                           "w-full",
                           fieldState.invalid &&
-                            "border-destructive focus:ring-destructive"
+                            "border-destructive focus:ring-destructive",
                         )}
                       >
                         <SelectValue placeholder="Choose Type..." />
@@ -152,7 +158,7 @@ const TransactionForm = ({
                         className={cn(
                           "w-full",
                           fieldState.invalid &&
-                            "border-destructive focus:ring-destructive"
+                            "border-destructive focus:ring-destructive",
                         )}
                       >
                         <SelectValue placeholder="Choose Status..." />
@@ -161,44 +167,8 @@ const TransactionForm = ({
                         <SelectItem value="completed">Completed</SelectItem>
                         <SelectItem value="on_delivery">On Delivery</SelectItem>
                         <SelectItem value="pending">Pending</SelectItem>
-                        {/* <SelectItem value="failed">Failed</SelectItem>
-                        <SelectItem value="cancelled">Cancelled</SelectItem> */}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="space-y-2">
-            <FormField
-              name="paymentMethod"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Payment Method</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger
-                        className={cn(
-                          "w-full",
-                          fieldState.invalid &&
-                            "border-destructive focus:ring-destructive"
-                        )}
-                      >
-                        <SelectValue placeholder="Choose Payment Method..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="cash">Cash</SelectItem>
-                        <SelectItem value="credit_card">Credit Card</SelectItem>
-                        <SelectItem value="debit_card">Debit Card</SelectItem>
-                        <SelectItem value="bank_transfer">
-                          Bank Transfer
-                        </SelectItem>
+                        <SelectItem value="failed">Failed</SelectItem>
+                        <SelectItem value="cancelled">Cancelled</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -220,7 +190,7 @@ const TransactionForm = ({
           name="prescriptionDetails"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Medicines</FormLabel>
+              <FormLabel>{t("medicines")}</FormLabel>
               <FormControl>
                 <Textarea
                   id="notes"
@@ -241,7 +211,7 @@ const TransactionForm = ({
             name="totalAmount"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Total Price</FormLabel>
+                <FormLabel>{t("totalPrice")}</FormLabel>
                 <FormControl>
                   <Input
                     type="numeric"
@@ -259,7 +229,44 @@ const TransactionForm = ({
             )}
           />
         </div>
+
         <div className="space-y-2">
+          <FormField
+            name="paymentMethod"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>{t("paymentMethod")}</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger
+                      className={cn(
+                        "w-full",
+                        fieldState.invalid &&
+                          "border-destructive focus:ring-destructive",
+                      )}
+                    >
+                      <SelectValue placeholder="Choose Payment Method..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="cash">Cash</SelectItem>
+                      <SelectItem value="credit_card">Credit Card</SelectItem>
+                      <SelectItem value="debit_card">Debit Card</SelectItem>
+                      <SelectItem value="bank_transfer">
+                        Bank Transfer
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        {/* <div className="space-y-2">
           <FormField
             name="courier"
             control={form.control}
@@ -275,7 +282,7 @@ const TransactionForm = ({
                       className={cn(
                         "w-full",
                         fieldState.invalid &&
-                          "border-destructive focus:ring-destructive"
+                          "border-destructive focus:ring-destructive",
                       )}
                     >
                       <SelectValue placeholder="Choose Courier..." />
@@ -304,7 +311,7 @@ const TransactionForm = ({
               </FormItem>
             )}
           />
-        </div>
+        </div> */}
       </div>
       {/* </div> */}
 

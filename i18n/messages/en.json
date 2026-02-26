@@ -13,5 +13,83 @@
     "login": "Login",
     "noAccount": "Don't have an account?",
     "contactAdmin": "Contact your Administrator"
-  }
+  },
+   "Navbar": {
+    "myAccount": "My Account",
+    "profile": "Profile",
+    "setting": "Settings",
+    "logout": "Logout"
+  },
+  "Transactions": {
+    "pageTitle":"Pharmacy Transactions",
+    "description": "Monitor medicine sales and prescription transactions",
+    "card1Title": "Total Revenue", 
+    "card1Desc": "from last month",
+    "card2Title": "Medicines Sold", 
+    "card2Desc": "Units this month",
+    "card3Title": "Completed Orders", 
+    "card3Desc": "Finished Order",
+    "card4Title": "Pending Orders", 
+    "card4Desc": "Awaiting processing",
+    "search": "Search transactions or medicines...", 
+    "filterLabel1": "All Status",
+    "filterLabel2": "Completed",
+    "filterLabel3": "On Delivery",
+    "export": "Export",
+    "addTransaction": "Add Transaction"
+  },
+   "Sidebar": {
+    "dashboard": "Dashboard",
+    "transaction": "Transaction",
+    "userManagement": "User Management",
+    "reports": "Reports",
+    "systemSettings": "System Settings"
+  },
+  "TransactionTable": {
+    "cardTitle": "Recent Transactions",
+    "cardDescription": "A complete list of all pharmacy transactions and medicine sales.",
+    "colTransaction": "Transaction",
+    "colPatientName": "Patient Name",
+    "colAmount": "Amount",
+    "colType": "Type",
+    "colMedicines": "Medicines",
+    "colStatus": "Status",
+    "colMethod": "Payment Method",
+    "colCourier": "Courier",
+    "colDate": "Date",
+    "colActions": "Actions",
+    "btnEdit": "Edit",
+    "btnDelete": "Delete",
+    "footerPrev": "Previous",
+    "footerNext": "Next",
+    "footPage": "Page",
+    "footOf": "of",
+    "footRowsPage": "Rows per page"
+  },
+  "AddTransactionDialog":{
+    "dialogTitle": "Add New Transaction",
+    "dialogDescription": "Create a new transaction with medicines.",
+    "btnCancel": "Cancel",
+    "btnLoading": "Adding Transaction...",
+    "btnSubmit": "Add Transaction",
+    "patientInformation": "Patient Information",
+    "patientName": "Patient Name",
+    "patientNamePlaceholder": "Enter Patient Name...",
+    "patientPhone": "Patient Phone",
+    "patientPhonePlaceholder": "Enter Phone Number...",
+    "patientAddress": "Address",
+    "patientAddressPlaceholder": "Enter Address...",
+    "transactionDetails": "Transaction Details",
+    "transactionType": "Transaction Type",
+    "medicines": "Medicines",
+    "totalPrice": "Total Price",
+    "paymentMethod": "Payment Method"
+  },
+   "EditTransactionDialog": {
+    "dialogTitle": "Edit Transaction",
+    "dialogDescription": "Make changes to the transaction.",
+    "btnCancel": "Cancel",
+    "btnLoading": "Updating Transaction...",
+    "btnSubmit": "Save Changes"
+  }  
 }

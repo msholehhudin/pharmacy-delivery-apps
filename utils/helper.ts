@@ -35,3 +35,8 @@ export const formatCurrency = (amount: number) => {
       minimumFractionDigits: 0,
     }).format(amount);
   };
+
+export const withLocale = (locale: string, path: string) => {
+  if (path === "/") return `/${locale}`;
+  return `/${locale}${path}`;
+};
