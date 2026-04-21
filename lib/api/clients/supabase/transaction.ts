@@ -1,51 +1,51 @@
-import { TransactionFormValues } from "@/components/PharmacyTransactions/TransactionForm";
-import { supabase } from "@/lib/supabase/client";
-import { createServer } from "@/lib/supabase/server";
-import { Transaction } from "@/types/transactions";
 
-export class SupabaseTransactionRepository{
-    // Client-side operations
-    async getTransactions(): Promise<Transaction[]>{
-        const {data: {session}} = await supabase.auth.getSession()
-        if(!session) return []
+// import { supabase } from "@/lib/supabase/client";
+// import { createServer } from "@/lib/supabase/server";
+// import { Transaction, TransactionFormValues } from "@/types/transactions";
 
-        const {data, error} = await supabase
-            .from('transactions')
-            .select('*')
-            .order('created_at', {ascending: false})
+// export class SupabaseTransactionRepository{
+//     // Client-side operations
+//     async getTransactions(): Promise<Transaction[]>{
+//         const {data: {session}} = await supabase.auth.getSession()
+//         if(!session) return []
 
-        if(error) throw error
-        return data || []
-    }
+//         const {data, error} = await supabase
+//             .from('transactions')
+//             .select('*')
+//             .order('created_at', {ascending: false})
 
-    // Server-side operations
-    async createTransaction(values: TransactionFormValues): Promise<Transaction>{
+//         if(error) throw error
+//         return data || []
+//     }
 
-        const supabase = await createServer()
-        const {data: {session}} = await supabase.auth.getSession()
-        if(!session) throw new Error('Not Authenticated!')
+//     // Server-side operations
+//     async createTransaction(values: TransactionFormValues): Promise<Transaction>{
 
-         const insertData = {
-            patient_name: values.patientName,
-            patient_address: values.patientAddress,
-            patient_phone: values.patientPhone,
-            courier_id: values.courier,
-            prescription_details: values.prescriptionDetails,
-            total_amount: values.totalAmount,
-            payment_method: values.paymentMethod,
-            status: 'pending',
-            notes: values.notes || null,
-            user_id: session.user.id
-        }
+//         const supabase = await createServer()
+//         const {data: {session}} = await supabase.auth.getSession()
+//         if(!session) throw new Error('Not Authenticated!')
 
-        const {data, error} = await supabase
-            .from('transactions')
-            .insert(insertData)
-            .select('*')
-            .single()
+//          const insertData = {
+//             patient_name: values.patientName,
+//             patient_address: values.patientAddress,
+//             patient_phone: values.patientPhone,
+//             courier_id: values.courier,
+//             prescription_details: values.prescriptionDetails,
+//             total_amount: values.totalAmount,
+//             payment_method: values.paymentMethod,
+//             status: 'pending',
+//             notes: values.notes || null,
+//             user_id: session.user.id
+//         }
 
-        if(error) throw error
+//         const {data, error} = await supabase
+//             .from('transactions')
+//             .insert(insertData)
+//             .select('*')
+//             .single()
 
-        return data
-    }
-}
+//         if(error) throw error
+
+//         return data
+//     }
+// }

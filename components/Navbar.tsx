@@ -16,10 +16,14 @@ import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useAuth } from "@/context/AuthProvider";
+import NotificationBell from "./Notifications/NotificationBell";
+import ThemeToggle from "./ThemeToggle";
+import { useTranslations } from "next-intl";
 
 const Navbar = () => {
   const { setTheme } = useTheme();
   const { logout } = useAuth();
+  const t = useTranslations("Navbar");
 
   return (
     <nav className="flex items-center justify-between">
@@ -28,13 +32,14 @@ const Navbar = () => {
       {/* RIGHT */}
       <div className="flex items-center gap-4">
         {/* <Link href={"/"}>Dashboard</Link> */}
-        <div className="p-2 rounded-sm hover:cursor-pointer dark:hover:bg-slate-900">
-          <Bell />
-        </div>
 
-        <DropdownMenu>
+        <NotificationBell />
+
+        <ThemeToggle />
+
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size={"icon"} className="cursor-pointer">
+            <Button variant="ghost" size={"icon"} className="cursor-pointer">
               <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
               <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
               <span className="sr-only">Toggle theme</span>
@@ -60,7 +65,7 @@ const Navbar = () => {
               System
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
 
         <DropdownMenu>
           <DropdownMenuTrigger>
@@ -70,15 +75,15 @@ const Navbar = () => {
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent sideOffset={10} className="mr-4">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>{t("myAccount")}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer">
               <User className="h-[1.2rem] w-[1.2rem] mr-2" />
-              Profile
+              {t("profile")}
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
               <Settings className="h-[1.2rem] w-[1.2rem] mr-2" />
-              Settings
+              {t("setting")}
             </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"
@@ -86,7 +91,7 @@ const Navbar = () => {
               onClick={logout}
             >
               <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
-              Logout
+              {t("logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

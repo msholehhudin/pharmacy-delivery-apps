@@ -18,7 +18,8 @@ type AuthContextType = {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  // logout: () => Promise<void>;
+  logout: () => void;
   resetPassword: (email: string) => Promise<void>;
   loadingLogout: boolean;
 };
@@ -32,6 +33,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loadingLogout, setLogoutLoading] = useState(false);
 
   const router = useRouter();
+
+  const getLocaleFromPath = () => {
+    if (typeof window === "undefined") return "id";
+    return window.location.pathname.split("/")[1] || "id";
+  };
 
   const getSession = useCallback(async () => {
     setLoading(true);
@@ -62,6 +68,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
+      // if (userData) {
+      //   await supabase.auth.updateUser({
+      //     data: {
+      //       role: userData.role,
+      //     },
+      //   });
+
+      //   await supabase.auth.refreshSession();
+
+      //   setUser({
+      //     id: session.user.id,
+      //     name: userData.name ?? "",
+      //     email: session.user.email ?? "",
+      //     phone: userData.phone ?? "",
+      //     role: userData.role ?? "",
+      //     status: userData.status ?? "",
+      //     avatar: userData.avatar ?? "",
+      //     created_at: userData.created_at ?? "",
+      //     last_sign_in: userData.last_sign_in ?? "",
+      //   });
+      // }
+
       if (userData) {
         setUser({
           id: session.user.id,
@@ -74,7 +102,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           created_at: userData.created_at ?? "",
           last_sign_in: userData.last_sign_in ?? "",
         });
-        console.log("data di session  : ", userData);
       }
     } else {
       setUser(null);
@@ -98,9 +125,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         if (data?.user) {
-          console.log("user di login function  : ", data);
+          // console.log("user di login function  : ", data);
           await getSession();
         }
+
+        supabase.auth.getUser().then((u) => {
+          console.log("JWT contents:", u.data.user);
+        });
+
         setLoading(false);
       } catch (err) {
         console.error("Login error: ", err);
@@ -109,23 +141,52 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(false);
       }
     },
-    [getSession]
+    [getSession],
   );
 
-  const logout = useCallback(async () => {
+  // const logout = useCallback(async () => {
+  //   setLogoutLoading(true);
+  //   try {
+  //     console.log("1. Starting Logout...");
+
+  //     const { error } = await supabase.auth.signOut();
+
+  //     if (error) {
+  //       console.error("Supabase signOut error:", error);
+  //       setError(error.message);
+  //       return;
+  //     }
+
+  //     await new Promise((res) => setTimeout(res, 1000));
+  //     console.log("2. SignOut successful");
+  //     setUser(null);
+  //     console.log("3. User cleared");
+
+  //     // router.refresh();
+  //     // router.push("/login");
+  //     window.location.replace("/login");
+  //     console.log("4. Navigation triggered");
+  //   } catch (err) {
+  //     setError("Logout failed. Please try again.");
+  //     console.error("Unexpected logout error: ", err);
+  //   } finally {
+  //     setLogoutLoading(false);
+  //   }
+  // }, []);
+
+  const logout = () => {
     setLogoutLoading(true);
-    try {
-      await supabase.auth.signOut();
-      await new Promise((res) => setTimeout(res, 1000));
-      // setUser(null);
-      router.refresh();
-    } catch (err) {
-      setError("Logout failed. Please try again.");
-      console.error("Unexpected logout error: ", err);
-    } finally {
-      setLogoutLoading(false);
-    }
-  }, [router]);
+    setUser(null);
+
+    const locale = getLocaleFromPath();
+
+    fetch("/api/users/logout", {
+      method: "POST",
+      credentials: "include",
+    }).finally(() => {
+      window.location.href = `${locale}/login`;
+    });
+  };
 
   const resetPassword = useCallback(async (email: string) => {
     try {

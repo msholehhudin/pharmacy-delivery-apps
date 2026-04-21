@@ -9,12 +9,14 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
+import { useTranslations } from "next-intl";
 
 interface PharmacyFiltersProps {
   search: string;
   onSearchChange: (value: string) => void;
   statusFilter: string;
   onStatusChange: (value: string) => void;
+  onAddTransaction: () => void;
 }
 
 const PharmacyFilters = ({
@@ -22,15 +24,17 @@ const PharmacyFilters = ({
   onSearchChange,
   statusFilter,
   onStatusChange,
+  onAddTransaction,
 }: PharmacyFiltersProps) => {
-  // console.log("search : ", search);
+  const t = useTranslations("Transactions");
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between my-6">
-      <div className="sm:flex sm:items-center sm:flex-row space-x-4 hidden">
+      <div className="md:flex md:items-center md:flex-row space-x-4 hidden">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 2-4" />
           <Input
-            placeholder="Search transactions or medicines..."
+            placeholder={t("search")}
             className="pl-10 w-80"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
@@ -42,9 +46,9 @@ const PharmacyFilters = ({
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-            <SelectItem value="pending">On Delivery</SelectItem>
+            <SelectItem value="all">{t("filterLabel1")}</SelectItem>
+            <SelectItem value="completed">{t("filterLabel2")}</SelectItem>
+            <SelectItem value="pending">{t("filterLabel3")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -52,11 +56,11 @@ const PharmacyFilters = ({
       <div className="flex items-center space-x-2">
         <Button variant={"outline"} className="hover:cursor-pointer">
           <Download className="mr-2 w-4 h-4" />
-          Export
+          {t("export")}
         </Button>
-        <Button className="hover:cursor-pointer">
+        <Button className="hover:cursor-pointer" onClick={onAddTransaction}>
           <Plus className="mr-2 w-4 h-4" />
-          Add Transaction
+          {t("addTransaction")}
         </Button>
       </div>
     </div>

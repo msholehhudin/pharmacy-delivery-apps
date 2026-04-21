@@ -1,3 +1,4 @@
+import { clientRepositories } from "@/lib/api/clients/supabase/client"
 import { CreateUserData, User } from "@/types/user"
 
 
@@ -72,4 +73,17 @@ export const deleteUser = async(id:string) => {
   }
 
   return res.json()
+}
+
+export class UserService {
+  async getCouriers(){
+    // return clientRepositories.couriers.getCouriers()
+    const res = await fetch('/api/users/couriers', {
+      cache: 'no-store'
+    })
+
+    if(!res.ok) throw new Error("Failed to fetch couriers")
+
+    return res.json()
+  }
 }

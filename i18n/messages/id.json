@@ -1,0 +1,134 @@
+
+{
+  "Home": {
+    "title": "Selamat Datang di MediXpress",
+    "description": "Aplikasi pengiriman obat terpercaya"
+  },
+  "Auth": {
+    "loginTitle": "Masuk ke akun Anda",
+    "loginDescription": "Masukkan email dan password Anda untuk masuk",
+    "email": "Email",
+    "password": "Kata Sandi",
+    "forgotPassword": "Lupa kata sandi?",
+    "loading": "Memuat...",
+    "login": "Masuk",
+    "noAccount": "Tidak punya akun? ",
+    "contactAdmin": "Hubungi Administrator"
+  },
+  "Navbar": {
+    "myAccount": "Akun Saya",
+    "profile": "Profil",
+    "setting": "Pengaturan",
+    "logout": "Keluar"
+  },
+  "Transactions": {
+    "pageTitle":"Transaksi Apotek",
+    "description": "Pantau penjualan obat dan transaksi resep secara real-time",
+    "card1Title": "Total Pendapatan", 
+    "card1Desc": "dibanding bulan lalu",
+    "card2Title": "Obat Terjual", 
+    "card2Desc": "Unit bulan ini",
+    "card3Title": "Pesanan Selesai", 
+    "card3Desc": "Jumlah Pesanan Terantarkan",
+    "card4Title": "Pesanan Tertunda", 
+    "card4Desc": "Menunggu diproses",
+    "search": "Cari transaksi atau obat...", 
+    "filterLabel1": "Semua Status",
+    "filterLabel2": "Selesai",
+    "filterLabel3": "Dalam Pengiriman",
+    "export": "Ekspor",
+    "addTransaction": "Tambah Transaksi"
+  },
+  "Sidebar": {
+    "dashboard": "Beranda",
+    "transaction": "Transaksi",
+    "userManagement": "Manajemen User",
+    "reports": "Laporan",
+    "systemSettings": "Pengaturan Sistem"
+  },
+  "TransactionTable": {
+    "cardTitle": "Transaksi Terkini",
+    "cardDescription": "Daftar lengkap semua transaksi apotek dan penjualan obat.",
+    "colTransaction": "Nomer Transaksi",
+    "colPatientName": "Informasi Pasien",
+    "colAmount": "Jumlah",
+    "colType": "Tipe",
+    "colMedicines": "Obat",
+    "colStatus": "Status",
+    "colMethod": "Metode Pembayaran",
+    "colCourier": "Kurir",
+    "colDate": "Tanggal Transaksi",
+    "colActions": "Aksi",
+    "btnEdit": "Ubah",
+    "btnDelete": "Hapus",
+    "footerPrev": "Sebelumnya",
+    "footerNext": "Selanjutnya",
+    "footPage": "Halaman",
+    "footOf": "dari",
+    "footRowsPage": "Baris per halaman"
+  },
+   "AddTransactionDialog":{
+    "dialogTitle": "Tambahkan Transaksi Baru",
+    "dialogDescription": "Buat Transaksi Baru beserta dengan Obat.",
+    "btnCancel": "Batalkan",
+    "btnLoading": "Sedang Menambahkan...",
+    "btnSubmit": "Tambahkan Transaksi",
+    "patientInformation": "Informasi Pasien",
+    "patientName": "Nama Pasien",
+    "patientNamePlaceholder": "Masukkan Nama Pasien...",
+    "patientPhone": "Nomer Telphone",
+    "patientPhonePlaceholder": "Masukkan Nama Pasien...",
+    "patientAddress": "Alamat Lengkap",
+    "patientAddressPlaceholder": "Masukkan Alamat Pasien...",
+    "transactionDetails": "Detil Transaksi",
+    "transactionType": "Tipe Transaksi",
+    "medicines": "Obat",
+    "totalPrice": "Total Bayar",
+    "paymentMethod": "Metode Pembayaran"
+  },
+  "EditTransactionDialog": {
+    "dialogTitle": "Edit Transaksi",
+    "dialogDescription": "Buat perubahan pada transaksi ini.",
+    "btnCancel": "Batalkan",
+    "btnLoading": "Sedang Mengubah...",
+    "btnSubmit": "Simpan Perubahan"
+  }, 
+  "SystemSettingHeader": {
+    "pageTitle": "Pengaturan Sistem",
+    "pageDescription": "Buat peraturan pada sistem transaksi"
+  }, 
+  "FeeSettings": {
+    "systemDesc": "Biaya operasional platform yang dikenakan pada setiap transaksi",
+    "pharmacistDesc": "Biaya yang dialokasikan untuk operator apoteker yang bertugas",
+    "medicalDesc": "Biaya yang dialokasikan untuk penyedia layanan medis yang menggunakan platform ini",
+    "courierDesc": "Biaya yang dialokasikan untuk Kurir yang ditunjuk setiap transaksi",
+    "saveButton": "Simpan perubahan"
+  } ,
+  "FeeLabels": {
+    "system": "Sistem",
+    "pharmacist": "Operator Apoteker",
+    "medical": "Corporate",
+    "courier": "Kurir",
+    "systemFee": "Biaya Sistem",
+    "pharmacistFee": "Biaya Operator Apoteker",
+    "medicalFee": "Biaya Corporate",
+    "courierFee": "Biaya Kurir",
+    "totalFee": "Total Biaya",
+    "remainMargin": "Margin tersisa",
+    "totalExceeds": "Total biaya melebihi 100%"
+  },
+  "DistanceRateSettings": {
+    "baseRateLabel": "Tarif dasar",
+    "ratePerKmTitle": "Biaya per kilometer",
+    "ratePerKmDesc": "Tarif yang dikenakan untuk setiap kilometer jarak pengiriman",
+    "baseFeeLabel": "Biaya awal",
+    "baseFeeTitle": "Biaya minimum (flag fall)",
+    "baseFeeDesc": "Biaya tetap di awal sebelum perhitungan jarak dimulai",
+    "freeKmLabel": "Jarak gratis",
+    "freeKmTitle": "Jarak gratis pertama",
+    "freeKmDesc": "Jarak awal yang tidak dikenakan biaya per km",
+    "simulationTitle": "Simulasi biaya pengiriman",
+    "simulationDesc": "Pratinjau otomatis berdasarkan nilai yang diatur di atas",
+    "saveButton": "Simpan perubahan"
+  }
+}

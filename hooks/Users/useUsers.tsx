@@ -1,6 +1,10 @@
 "use client";
 
-import { createUser, getUsers } from "@/lib/services/users/usersService";
+import {
+  createUser,
+  getUsers,
+  UserService,
+} from "@/lib/services/users/usersService";
 import { User } from "@/types/user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -24,5 +28,14 @@ export const useCreateUser = () => {
     onError: (error) => {
       console.error("Failed to create user: ", error);
     },
+  });
+};
+
+const userService = new UserService();
+
+export const useCouriers = () => {
+  return useQuery<User[], Error>({
+    queryKey: ["couriers"],
+    queryFn: () => userService.getCouriers(),
   });
 };

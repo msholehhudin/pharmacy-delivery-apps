@@ -27,7 +27,7 @@ import {
 import { toast } from "sonner";
 import { createTransaction } from "@/lib/api/transactions/actions";
 import { useRouter } from "next/navigation";
-import { formSchema, TransactionFormValues } from "@/types/transactions";
+import { TransactionFormValues } from "@/types/transactions";
 
 // const supabase = createClient();
 // const router = useRouter();
@@ -80,7 +80,7 @@ const handleSubmit = async (values: TransactionFormValues) => {
 
 const TransactionForm = () => {
   const form = useForm<TransactionFormValues>({
-    resolver: zodResolver(formSchema),
+    // resolver: zodResolver(formSche),
     defaultValues: {
       patientName: "",
       courier: "",
@@ -253,7 +253,7 @@ const TransactionForm = () => {
             </FormItem>
           )}
         />
-        <div className="flex justify-end gap-3 mt-8">
+        {/* <div className="flex justify-end gap-3 mt-8">
           <AlertDialogCancel asChild>
             <Button variant={"outline"} className="cursor-pointer">
               Cancel
@@ -262,7 +262,7 @@ const TransactionForm = () => {
           <Button type="submit" className="cursor-pointer">
             Submit
           </Button>
-        </div>
+        </div> */}
       </form>
     </Form>
   );

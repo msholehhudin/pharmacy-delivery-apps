@@ -14,7 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { formatDateTime, getStatusColor } from "@/utils/helper";
+import {
+  changeText,
+  formatCurrency,
+  formatDateTime,
+  getStatusColor,
+} from "@/utils/helper";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,31 +27,44 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
-import { formatCurrency } from "@/lib/utils/transactions/currency";
+import { Edit, MoreHorizontal, Printer, Trash2 } from "lucide-react";
 import { Badge } from "../ui/badge";
+import {
+  getPaymentIcon,
+  getTransactionTypeIcon,
+} from "@/lib/utils/tableIcons/getIcon";
+import { useAuth } from "@/context/AuthProvider";
+import { useTranslations } from "next-intl";
 
 interface TransactionTableProps {
   transactions: Transaction[];
   isLoading: boolean;
+  isFetching: boolean;
+  onEdit: (transaction: Transaction) => void;
+  onUpdateStatus: (transaction: Transaction) => void;
+  onPrint: (transaction: Transaction) => void;
 }
 
 const TransactionsTable = ({
   transactions,
   isLoading,
+  isFetching,
+  onEdit,
+  onUpdateStatus,
+  onPrint,
 }: TransactionTableProps) => {
-  console.log("TransactionList on table : ", transactions);
-  console.log("TransactionList on isLoading : ", isLoading);
+  const { user } = useAuth();
+  const userRole = user?.role;
+  const t = useTranslations("TransactionTable");
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Recent Transactions</CardTitle>
-        <CardDescription>
-          A complete list of all pharmacy transactions and medicine sales.
-        </CardDescription>
+        <CardTitle>{t("cardTitle")}</CardTitle>
+        <CardDescription>{t("cardDescription")}</CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
+        {isLoading || isFetching ? (
           <div className="flex items-center justify-center py-10">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             <span className="ml-4">Loading Pharmacy Transactions...</span>
@@ -54,17 +72,17 @@ const TransactionsTable = ({
         ) : (
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Transaction</TableHead>
-                <TableHead>Patient Name</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Medicines</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead>Courier</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Actions</TableHead>
+              <TableRow className="bg-muted">
+                <TableHead>{t("colTransaction")}</TableHead>
+                <TableHead>{t("colPatientName")}</TableHead>
+                <TableHead>{t("colMedicines")}</TableHead>
+                <TableHead>{t("colAmount")}</TableHead>
+                <TableHead>{t("colType")}</TableHead>
+                <TableHead>{t("colStatus")}</TableHead>
+                <TableHead>{t("colMethod")}</TableHead>
+                <TableHead>{t("colCourier")}</TableHead>
+                <TableHead>{t("colDate")}</TableHead>
+                <TableHead>{t("colActions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -72,8 +90,10 @@ const TransactionsTable = ({
                 <TableRow key={transaction.id}>
                   <TableCell>
                     <div>
-                      <div className="font-medium">{transaction.notes}</div>
-                      <div className="text-sm text-gray-500">test</div>
+                      <div className="font-medium">
+                        {transaction.prescriptionCode}
+                      </div>
+                      {/* <div className="text-sm text-gray-500">test</div> */}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -86,21 +106,40 @@ const TransactionsTable = ({
                       </div>
                     </div>
                   </TableCell>
+                  <TableCell>{transaction.prescriptionDetails}</TableCell>
                   <TableCell>
                     <div className="font-medium">
                       {formatCurrency(transaction.amount)}
                     </div>
                     <div className="text-sm text-gray-500">Fee : Rp. 1000</div>
                   </TableCell>
-                  <TableCell>{transaction.status}</TableCell>
-                  <TableCell>{transaction.status}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      {getTransactionTypeIcon(transaction.type)}
+                      <span className="capitalize">{transaction.type}</span>
+                    </div>
+                  </TableCell>
+
                   <TableCell>
                     <Badge className={getStatusColor(transaction.status)}>
-                      {transaction.status}
+                      <span className="capitalize">
+                        {changeText(transaction.status)}
+                      </span>
                     </Badge>
                   </TableCell>
-                  <TableCell>{transaction.paymentMethod}</TableCell>
-                  <TableCell>{transaction.courier}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      {getPaymentIcon(transaction.paymentMethod)}
+                      <span className="capitalize">
+                        {transaction.paymentMethod}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className="capitalize">
+                      {transaction.courierName}
+                    </span>
+                  </TableCell>
                   <TableCell>
                     {formatDateTime(transaction.transactionDate)}
                   </TableCell>
@@ -115,14 +154,38 @@ const TransactionsTable = ({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
+                        {userRole && userRole === "courier" ? (
+                          <>
+                            <DropdownMenuItem
+                              className="hover:cursor-pointer"
+                              onClick={() => onUpdateStatus(transaction)}
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                              Update Status
+                            </DropdownMenuItem>
+                          </>
+                        ) : (
+                          <>
+                            <DropdownMenuItem
+                              onClick={() => onEdit(transaction)}
+                              className="hover:cursor-pointer"
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                              {t("btnEdit")}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => onPrint(transaction)}
+                              className="hover:cursor-pointer"
+                            >
+                              <Printer className="mr-2 h-4 w-4" />
+                              Print
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-600 hover:cursor-pointer">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              {t("btnDelete")}
+                            </DropdownMenuItem>
+                          </>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
