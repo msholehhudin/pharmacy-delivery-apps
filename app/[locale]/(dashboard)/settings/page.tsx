@@ -1,9 +1,15 @@
-import React from "react";
+import FeeSetting from "@/components/SystemSettings/FeeSetting";
+import SettingHeader from "@/components/SystemSettings/SettingHeader";
+import SettingTabs from "@/components/SystemSettings/SettingTabs";
 
 const Settings = () => {
   return (
-    <div className=" flex pt-10 pl-10 ">
-      <h1 className="text-4xl text-red-600">Settings Menu is Coming Soon</h1>
+    <div className="min-h-screen">
+      <div className="px-8 py-6">
+        <SettingHeader />
+        <SettingTabs />
+        {/* <FeeSetting /> */}
+      </div>
     </div>
   );
 };

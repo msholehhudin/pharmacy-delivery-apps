@@ -91,5 +91,43 @@
     "btnCancel": "Cancel",
     "btnLoading": "Updating Transaction...",
     "btnSubmit": "Save Changes"
-  }  
+  }, 
+  "SystemSettingHeader": {
+    "pageTitle": "System Settings",
+    "pageDescription": "Make a rule for the transaction system"
+  },
+  "FeeSettings": {
+    "systemDesc": "Operational platform fee for each transaction",
+    "pharmacistDesc": "Biaya yang dialokasikan untuk operator apoteker yang bertugas",
+    "medicalDes": "Biaya yang dialokasikan untuk penyedia layanan medis yang menggunakan platform ini",
+    "courierDesc": "Biaya yang dialokasikan untuk Kurir yang ditunjuk setiap transaksi" ,
+    "saveButton": "Save Changes"
+  } ,
+  "FeeLabels": {
+    "system": "System",
+    "pharmacist": "Pharmacist Operator",
+    "medical": "Medical",
+    "courier": "Courier",
+    "systemFee": "System Fee",
+    "pharmacistFee": "Pharmachist Fee",
+    "medicalFee": "Medical Fee",
+    "courierFee": "Courier Fee",
+    "totalFee": "Total Fee",
+    "remainMargin": "Remaining Margin",
+    "totalExceeds": "Total fee exceeds 100%"
+  },
+  "DistanceRateSettings": {
+    "baseRateLabel": "Base rate",
+    "ratePerKmTitle": "Cost per kilometer",
+    "ratePerKmDesc": "The fee charged for each kilometer of delivery distance",
+    "baseFeeLabel": "Base fee",
+    "baseFeeTitle": "Minimum fee (flag fall)",
+    "baseFeeDesc": "A fixed initial charge before distance calculation begins",
+    "freeKmLabel": "Free distance",
+    "freeKmTitle": "Initial free distance",
+    "freeKmDesc": "The initial distance that is not charged per km",
+    "simulationTitle": "Delivery cost simulation",
+    "simulationDesc": "Automatic preview based on the values set above",
+    "saveButton": "Save changes"
+  }
 }

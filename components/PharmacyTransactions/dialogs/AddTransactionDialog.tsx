@@ -40,7 +40,7 @@ const AddTransactionDialog = ({
       status: "pending",
       prescriptionDetails: "",
       totalAmount: "",
-      courier: "",
+      // courier: "",
     },
   });
 

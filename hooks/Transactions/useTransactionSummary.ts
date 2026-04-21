@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 export type TransactionSummary = {
     totalRevenue: number
     totalItemSold: number
-    completeOrders: number
-    pendingOrders: number
+    completedOrderCount: number
+    pendingOrderCount: number
 }
 
 type summaryProps = {
@@ -15,7 +15,7 @@ const useTransactionSummary = ({month}: summaryProps) => {
   return useQuery<TransactionSummary>({
     queryKey: ['transaction-summary',month] ,
     queryFn: async() =>  {
-        const res = await fetch(`/api/dashboard/summary${month ? `?month${month}` : ""}`)
+        const res = await fetch(`/api/dashboard/summary${month ? `?month=${month}` : ""}`)
         
         if(!res.ok) throw new Error("Failed to fetch transaction summary")
         return res.json()

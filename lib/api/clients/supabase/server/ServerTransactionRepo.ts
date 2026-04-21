@@ -162,7 +162,7 @@ export class ServerTransactionRepo{
         const supabase = await createServer()
 
         const {data, error} = await supabase
-            .from('transaction')
+            .from('transactions')
             .select('*')
             .eq('id', id)
             .single()
@@ -174,12 +174,16 @@ export class ServerTransactionRepo{
     async getTransactionByMonth(startDate: string,endDate: string){
         const supabase = await createServer()
 
+        console.log("ini startDate :", startDate)
+        console.log("ini endDate :", endDate)
+
         const {data, error} = await supabase
-                .from('transaction')
+                .from('transactions')
                 .select(
                     `
                     total_amount,
                     status,
+                    created_at
                     `
                 )
                 .gte('created_at', startDate)

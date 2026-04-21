@@ -2,6 +2,9 @@ import { Transaction } from "@/types/transactions";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Calendar, Pill, TrendingUp } from "lucide-react";
 import { useTranslations } from "next-intl";
+import useTransactionSummary from "@/hooks/Transactions/useTransactionSummary";
+import { Skeleton } from "../ui/skeleton";
+import { formatCurrency } from "@/lib/utils/formatters/currency";
 
 interface PharmacyStatsProps {
   transactions: Transaction[];
@@ -10,6 +13,32 @@ interface PharmacyStatsProps {
 // const PharmacyStats = ({ transactions }: PharmacyStatsProps) => {
 const PharmacyStats = () => {
   const t = useTranslations("Transactions");
+  const currentMonth = new Date().toISOString().slice(0, 7);
+
+  const { data, isLoading, isError } = useTransactionSummary({
+    month: currentMonth,
+  });
+
+  console.log("Data summary : ", data);
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-28" />
+        ))}
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="text-sm text-muted-foreground">
+        Failed to load dashboard statistics
+      </div>
+    );
+  }
+
   return (
     <div className="grid md:grid-cols-4 gap-6 grid-cols-1">
       <Card>
@@ -21,8 +50,8 @@ const PharmacyStats = () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-green-600">
-            {/* {formatCurrency(totalRevenue)} */}
-            Rp. 12.000.000
+            {formatCurrency(data.totalRevenue)}
+            {/* Rp. 12.000.000 */}
           </div>
           <p className="text-xs text-muted-foreground">+12% {t("card1Desc")}</p>
         </CardContent>
@@ -37,8 +66,7 @@ const PharmacyStats = () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-blue-600">
-            {/* {totalMedicinesSold} */}
-            40
+            {data.totalItemSold || 0}
           </div>
           <p className="text-xs text-muted-foreground">{t("card2Desc")}</p>
         </CardContent>
@@ -53,8 +81,7 @@ const PharmacyStats = () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-purple-600">
-            {/* {totalMedicinesSold} */}
-            40
+            {data.completedOrderCount}
           </div>
           <p className="text-xs text-muted-foreground">{t("card3Desc")}</p>
         </CardContent>
@@ -69,7 +96,7 @@ const PharmacyStats = () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-yellow-600">
-            {/* {totalMedicinesSold} */}0
+            {data.pendingOrderCount}
           </div>
           <p className="text-xs text-muted-foreground">{t("card4Desc")}</p>
         </CardContent>

@@ -42,7 +42,7 @@ export const POST = async (request: NextRequest) => {
         const courierMap = new Map(couriers.map(c => [c.id, c.name]));
         const mappedTransactions = transactionResult.data.map(tx => ({
             ...tx,
-            courierName: courierMap.get(tx.courier) || 'Unknown Courier'
+            courierName: courierMap.get(tx.courier) || '-'
         }))
 
         

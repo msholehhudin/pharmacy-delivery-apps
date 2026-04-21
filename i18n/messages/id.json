@@ -92,5 +92,43 @@
     "btnCancel": "Batalkan",
     "btnLoading": "Sedang Mengubah...",
     "btnSubmit": "Simpan Perubahan"
-  } 
+  }, 
+  "SystemSettingHeader": {
+    "pageTitle": "Pengaturan Sistem",
+    "pageDescription": "Buat peraturan pada sistem transaksi"
+  }, 
+  "FeeSettings": {
+    "systemDesc": "Biaya operasional platform yang dikenakan pada setiap transaksi",
+    "pharmacistDesc": "Biaya yang dialokasikan untuk operator apoteker yang bertugas",
+    "medicalDesc": "Biaya yang dialokasikan untuk penyedia layanan medis yang menggunakan platform ini",
+    "courierDesc": "Biaya yang dialokasikan untuk Kurir yang ditunjuk setiap transaksi",
+    "saveButton": "Simpan perubahan"
+  } ,
+  "FeeLabels": {
+    "system": "Sistem",
+    "pharmacist": "Operator Apoteker",
+    "medical": "Corporate",
+    "courier": "Kurir",
+    "systemFee": "Biaya Sistem",
+    "pharmacistFee": "Biaya Operator Apoteker",
+    "medicalFee": "Biaya Corporate",
+    "courierFee": "Biaya Kurir",
+    "totalFee": "Total Biaya",
+    "remainMargin": "Margin tersisa",
+    "totalExceeds": "Total biaya melebihi 100%"
+  },
+  "DistanceRateSettings": {
+    "baseRateLabel": "Tarif dasar",
+    "ratePerKmTitle": "Biaya per kilometer",
+    "ratePerKmDesc": "Tarif yang dikenakan untuk setiap kilometer jarak pengiriman",
+    "baseFeeLabel": "Biaya awal",
+    "baseFeeTitle": "Biaya minimum (flag fall)",
+    "baseFeeDesc": "Biaya tetap di awal sebelum perhitungan jarak dimulai",
+    "freeKmLabel": "Jarak gratis",
+    "freeKmTitle": "Jarak gratis pertama",
+    "freeKmDesc": "Jarak awal yang tidak dikenakan biaya per km",
+    "simulationTitle": "Simulasi biaya pengiriman",
+    "simulationDesc": "Pratinjau otomatis berdasarkan nilai yang diatur di atas",
+    "saveButton": "Simpan perubahan"
+  }
 }
