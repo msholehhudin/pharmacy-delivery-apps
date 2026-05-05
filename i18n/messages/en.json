@@ -36,13 +36,15 @@
     "filterLabel2": "Completed",
     "filterLabel3": "On Delivery",
     "export": "Export",
-    "addTransaction": "Add Transaction"
+    "addTransaction": "Add Transaction",
+    "uploadTransaction": "Upload Transaction"
   },
    "Sidebar": {
     "dashboard": "Dashboard",
     "transaction": "Transaction",
     "userManagement": "User Management",
     "reports": "Reports",
+     "balance": "Balance",
     "systemSettings": "System Settings"
   },
   "TransactionTable": {

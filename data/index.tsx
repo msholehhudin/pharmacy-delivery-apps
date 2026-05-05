@@ -8,6 +8,7 @@ import {
   Truck,
   User,
   LucideIcon,
+  Wallet,
 } from "lucide-react";
 
 type MenuItem = {
@@ -37,6 +38,11 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
       title: "reports",
       url: "/reports",
       icon: BarChart2,
+    },
+    {
+      title: "balance",
+      url: "/balance",
+      icon: Wallet,
     },
     {
       title: "systemSettings",

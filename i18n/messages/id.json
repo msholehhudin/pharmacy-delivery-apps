@@ -37,13 +37,15 @@
     "filterLabel2": "Selesai",
     "filterLabel3": "Dalam Pengiriman",
     "export": "Ekspor",
-    "addTransaction": "Tambah Transaksi"
+    "addTransaction": "Tambah Transaksi",
+    "uploadTransaction": "Upload Transaksi"
   },
   "Sidebar": {
     "dashboard": "Beranda",
     "transaction": "Transaksi",
     "userManagement": "Manajemen User",
     "reports": "Laporan",
+    "balance": "Saldo",
     "systemSettings": "Pengaturan Sistem"
   },
   "TransactionTable": {

@@ -1,5 +1,4 @@
-import { Download, Plus, Search } from "lucide-react";
-import React from "react";
+import { Download, Plus, Search, Upload } from "lucide-react";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -10,6 +9,7 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 interface PharmacyFiltersProps {
   search: string;
@@ -54,14 +54,24 @@ const PharmacyFilters = ({
       </div>
 
       <div className="flex items-center space-x-2">
-        <Button variant={"outline"} className="hover:cursor-pointer">
+        <Button variant={"outline"} className="hover:cursor-pointer" disabled>
           <Download className="mr-2 w-4 h-4" />
           {t("export")}
         </Button>
-        <Button className="hover:cursor-pointer" onClick={onAddTransaction}>
+        <Button
+          className="hover:cursor-pointer"
+          onClick={onAddTransaction}
+          disabled
+        >
           <Plus className="mr-2 w-4 h-4" />
           {t("addTransaction")}
         </Button>
+        <Link href={"/id/transactions/create"}>
+          <Button className="hover:cursor-pointer">
+            <Upload className="mr-2 w-4 h-4" />
+            {t("uploadTransaction")}
+          </Button>
+        </Link>
       </div>
     </div>
   );
