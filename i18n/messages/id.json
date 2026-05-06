@@ -45,7 +45,7 @@
     "transaction": "Transaksi",
     "userManagement": "Manajemen User",
     "reports": "Laporan",
-    "balance": "Saldo",
+    "wallet": "Saldo",
     "systemSettings": "Pengaturan Sistem"
   },
   "TransactionTable": {
@@ -132,5 +132,9 @@
     "simulationTitle": "Simulasi biaya pengiriman",
     "simulationDesc": "Pratinjau otomatis berdasarkan nilai yang diatur di atas",
     "saveButton": "Simpan perubahan"
+  },
+   "wallet": {
+    "title": "Saldo Saya",
+    "description":  "Kelola saldo, penarikan, dan riwayat transaksi Anda"
   }
 }

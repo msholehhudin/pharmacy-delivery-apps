@@ -40,8 +40,8 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
       icon: BarChart2,
     },
     {
-      title: "balance",
-      url: "/balance",
+      title: "wallet",
+      url: "/wallet",
       icon: Wallet,
     },
     {
