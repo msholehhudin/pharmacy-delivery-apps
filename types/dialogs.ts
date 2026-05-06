@@ -4,4 +4,5 @@ export interface DialogStates {
     edit: boolean
     delete: boolean
     updateStatus: boolean
+    print: boolean
 }

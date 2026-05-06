@@ -19,12 +19,18 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthProvider";
 import Image from "next/image";
 import { Hospital } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { withLocale } from "@/utils/helper";
 
 const AppSidebar = () => {
   const { user } = useAuth();
   const userRole = user?.role;
-  // console.log("ini user role : ", userRole);
+  // const userCheck = user
+  // console.log("ini user role : ", user);
+
+  const t = useTranslations("Sidebar");
+  const { locale } = useParams<{ locale: string }>();
   const pathname = usePathname();
 
   if (!userRole) return null;
@@ -52,7 +58,8 @@ const AppSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item: any) => {
-                const isActive = pathname.startsWith(item.url);
+                const localizeUrl = withLocale(locale, item.url);
+                const isActive = pathname.startsWith(localizeUrl);
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
@@ -63,9 +70,9 @@ const AppSidebar = () => {
                           : "hover:bg-muted"
                       } transition-colors`}
                     >
-                      <Link href={item.url} prefetch>
+                      <Link href={localizeUrl} prefetch>
                         <item.icon />
-                        <span>{item.title}</span>
+                        <span>{t(item.title)}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

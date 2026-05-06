@@ -8,6 +8,7 @@ import {
   Truck,
   User,
   LucideIcon,
+  Wallet,
 } from "lucide-react";
 
 type MenuItem = {
@@ -19,66 +20,71 @@ type MenuItem = {
 export const menuItems: Record<UserRole, MenuItem[]> = {
   pharmacy_super_admin: [
     {
-      title: "Dashboard",
+      title: "dashboard",
       url: "/home",
       icon: Home,
     },
     {
-      title: "Transaction",
+      title: "transaction",
       url: "/transactions",
       icon: ArrowRightLeft,
     },
     {
-      title: "User Management",
+      title: "userManagement",
       url: "/users",
       icon: User,
     },
     {
-      title: "Reports",
+      title: "reports",
       url: "/reports",
       icon: BarChart2,
     },
     {
-      title: "System Settings",
+      title: "balance",
+      url: "/balance",
+      icon: Wallet,
+    },
+    {
+      title: "systemSettings",
       url: "/settings",
       icon: Settings,
     },
   ],
   pharmacy_apoteker: [
     {
-      title: "Dashboard",
+      title: "dashboard",
       url: "/home",
       icon: Home,
     },
     {
-      title: "Transaction",
+      title: "transaction",
       url: "/transactions",
       icon: ArrowRightLeft,
     },
     {
-      title: "User Management",
+      title: "userManagement",
       url: "/users",
       icon: User,
     },
     {
-      title: "Reports",
+      title: "reports",
       url: "/reports",
       icon: BarChart2,
     },
     {
-      title: "System Settings",
+      title: "systemSettings",
       url: "/settings",
       icon: Settings,
     },
   ],
   pharmacy_staff: [
     {
-      title: "Dashboard",
+      title: "dashboard",
       url: "/",
       icon: Home,
     },
     {
-      title: "Transaction",
+      title: "transaction",
       url: "/transactions",
       icon: ArrowRightLeft,
     },
@@ -90,7 +96,7 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
     //   icon: Home,
     // },
     {
-      title: "Transaction",
+      title: " transaction",
       url: "/transactions",
       icon: ArrowRightLeft,
     },

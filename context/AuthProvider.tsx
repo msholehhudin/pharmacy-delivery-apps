@@ -34,6 +34,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const router = useRouter();
 
+  const getLocaleFromPath = () => {
+    if (typeof window === "undefined") return "id";
+    return window.location.pathname.split("/")[1] || "id";
+  };
+
   const getSession = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -63,15 +68,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
+      // if (userData) {
+      //   await supabase.auth.updateUser({
+      //     data: {
+      //       role: userData.role,
+      //     },
+      //   });
+
+      //   await supabase.auth.refreshSession();
+
+      //   setUser({
+      //     id: session.user.id,
+      //     name: userData.name ?? "",
+      //     email: session.user.email ?? "",
+      //     phone: userData.phone ?? "",
+      //     role: userData.role ?? "",
+      //     status: userData.status ?? "",
+      //     avatar: userData.avatar ?? "",
+      //     created_at: userData.created_at ?? "",
+      //     last_sign_in: userData.last_sign_in ?? "",
+      //   });
+      // }
+
       if (userData) {
-        await supabase.auth.updateUser({
-          data: {
-            role: userData.role,
-          },
-        });
-
-        await supabase.auth.refreshSession();
-
         setUser({
           id: session.user.id,
           name: userData.name ?? "",
@@ -83,7 +102,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           created_at: userData.created_at ?? "",
           last_sign_in: userData.last_sign_in ?? "",
         });
-        // console.log("data di session  : ", userData);
       }
     } else {
       setUser(null);
@@ -123,7 +141,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(false);
       }
     },
-    [getSession]
+    [getSession],
   );
 
   // const logout = useCallback(async () => {
@@ -159,11 +177,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = () => {
     setLogoutLoading(true);
     setUser(null);
+
+    const locale = getLocaleFromPath();
+
     fetch("/api/users/logout", {
       method: "POST",
       credentials: "include",
     }).finally(() => {
-      window.location.href = "/login";
+      window.location.href = `${locale}/login`;
     });
   };
 

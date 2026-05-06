@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddTransaction } from "@/hooks/Transactions/useAddTransaction";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface AddTransactionDialogProps {
   open: boolean;
@@ -39,11 +40,12 @@ const AddTransactionDialog = ({
       status: "pending",
       prescriptionDetails: "",
       totalAmount: "",
-      courier: "",
+      // courier: "",
     },
   });
 
   const addTransaction = useAddTransaction();
+  const t = useTranslations("AddTransactionDialog");
 
   const handleSubmit = async (values: TransactionFormValues) => {
     console.log("Form submitted : ", values);
@@ -67,10 +69,8 @@ const AddTransactionDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="md:min-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Transaction</DialogTitle>
-          <DialogDescription>
-            Create a new transaction with medicines.
-          </DialogDescription>
+          <DialogTitle>{t("dialogTitle")}</DialogTitle>
+          <DialogDescription>{t("dialogDescription")}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -83,7 +83,7 @@ const AddTransactionDialog = ({
                 variant={"outline"}
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                {t("btnCancel")}
               </Button>
               <Button
                 type="submit"
@@ -93,10 +93,10 @@ const AddTransactionDialog = ({
                 {addTransaction.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Adding Transaction...
+                    {t("btnLoading")}
                   </>
                 ) : (
-                  "Add Transaction"
+                  t("btnSubmit")
                 )}
               </Button>
             </DialogFooter>

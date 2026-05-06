@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Button } from "./ui/button";
 import {
   Select,
@@ -23,6 +24,7 @@ const PaginationControls = ({
   onPageSizeChange,
 }: PaginationControlProps) => {
   const totalPages = Math.ceil(total / pageSize);
+  const t = useTranslations("TransactionTable");
   return (
     <div className="flex justify-between items-center mt-4">
       {/* Left */}
@@ -33,10 +35,10 @@ const PaginationControls = ({
           onClick={() => onPageChange(page - 1)}
           className="hover:cursor-pointer"
         >
-          Previous
+          {t("footerPrev")}
         </Button>
         <span>
-          Page {page} of {totalPages}
+          {t("footPage")} {page} {t("footOf")} {totalPages}
         </span>
         <Button
           variant={"outline"}
@@ -44,14 +46,14 @@ const PaginationControls = ({
           onClick={() => onPageChange(page + 1)}
           className="hover:cursor-pointer"
         >
-          Next
+          {t("footerNext")}
         </Button>
       </div>
 
       {/* Right */}
       <div className="md:flex items-center space-x-4 hidden">
         {/* <span>Showing</span> */}
-        <span>Rows per page</span>
+        <span>{t("footRowsPage")}</span>
         <Select
           value={String(pageSize)}
           onValueChange={(e) => onPageSizeChange(Number(e))}

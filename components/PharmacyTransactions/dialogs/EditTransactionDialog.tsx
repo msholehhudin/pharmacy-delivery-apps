@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { useUpdateTransaction } from "@/hooks/Transactions/useUpdateTransactions";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface EditTransactionDialogProps {
   open: boolean;
@@ -31,6 +32,7 @@ const EditTransactionDialog = ({
   onOpenChange,
   transaction,
 }: EditTransactionDialogProps) => {
+  const t = useTranslations("EditTransactionDialog");
   console.log("this transaction on edit modal comp : ", transaction);
 
   const form = useForm<TransactionFormValues>({
@@ -100,7 +102,7 @@ const EditTransactionDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="md:min-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit Transaction</DialogTitle>
+          <DialogTitle>{t("dialogTitle")}</DialogTitle>
           <DialogDescription>
             Make changes to the transaction.
           </DialogDescription>
@@ -116,16 +118,16 @@ const EditTransactionDialog = ({
                 variant={"outline"}
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                {t("btnCancel")}
               </Button>
               <Button type="submit">
                 {updateMutation.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Updating Transaction...
+                    {t("btnLoading")}
                   </>
                 ) : (
-                  "Save Changes"
+                  t("btnSubmit")
                 )}
               </Button>
             </DialogFooter>

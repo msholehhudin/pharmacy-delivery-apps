@@ -50,7 +50,7 @@ export const baseTransactionSchema = z.object({
   patientPhone: z
     .string()
     .min(1, 'Phone is required'),
-  courier: z.string().min(1, "Courier is required"),
+  
   type: z.string().min(1, "Insert type of transaction"),
   // status: z.string().min(1, "Status transaction is required"),
   prescriptionDetails: z.string().min(1, "Prescription details are required"),
@@ -70,7 +70,8 @@ export const createTransactionForm = baseTransactionSchema
 export type TransactionFormValues = z.infer<typeof createTransactionForm>;
 
 export const updateTransactionForm = baseTransactionSchema.partial().extend({
-  id: z.string().min(1, "ID is required for updates")
+  id: z.string().min(1, "ID is required for updates"),
+  courier: z.string().min(1, "Courier is required"),
 })
 export type UpdateTransactionValues = z.infer<typeof updateTransactionForm>
 
