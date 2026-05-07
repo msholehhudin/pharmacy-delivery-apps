@@ -1,4 +1,3 @@
-
 {
   "Home": {
     "title": "Selamat Datang di MediXpress",
@@ -149,5 +148,13 @@
     "status": "Status",
     "requestedAt": "Tanggal Pengajuan",
     "actions": "Aksi"
+  },
+  "Reports":{
+    "patientName":"Nama Pasien",
+    "totalAmount": "Total",
+    "corporate": "Corporate",
+    "system": "Sistem",
+    "courier": "Kurir",
+    "operator": "Operator"
   }
 }

@@ -148,5 +148,13 @@
     "status": "Status",
     "requestedAt": "Requested At",
     "actions": "Actions"
+  },
+   "Reports":{
+    "patientName":"Patient Name",
+    "totalAmount": "Total",
+    "corporate": "Corporate",
+    "system": "System",
+    "courier": "Courier",
+    "operator": "Operator"
   }
 }
