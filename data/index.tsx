@@ -9,6 +9,7 @@ import {
   User,
   LucideIcon,
   Wallet,
+  HandCoins,
 } from "lucide-react";
 
 type MenuItem = {
@@ -43,6 +44,11 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
       title: "wallet",
       url: "/wallet",
       icon: Wallet,
+    },
+    {
+      title: "withdraw",
+      url: "/withdraw",
+      icon: HandCoins,
     },
     {
       title: "systemSettings",

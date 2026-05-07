@@ -45,6 +45,7 @@
     "userManagement": "User Management",
     "reports": "Reports",
     "wallet": "Balance",
+    "withdraw": "Withdrawal Management",
     "systemSettings": "System Settings"
   },
   "TransactionTable": {
@@ -135,5 +136,17 @@
   "wallet": {
     "title": "My Wallet",
     "description":  "Manage your balance, withdrawals, and transaction history"
+  },
+  "WithdrawAdmin":{
+    "title": "Withdrawal Management",
+    "description": "Manage and approve withdrawal requests"
+  },
+   "WithdrawColumn":{
+    "user": "User",
+    "role": "Role",
+    "amount": "Withdrawal Amount",
+    "status": "Status",
+    "requestedAt": "Requested At",
+    "actions": "Actions"
   }
 }

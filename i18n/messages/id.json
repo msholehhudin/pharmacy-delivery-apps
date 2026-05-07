@@ -46,6 +46,7 @@
     "userManagement": "Manajemen User",
     "reports": "Laporan",
     "wallet": "Saldo",
+    "withdraw": "Penarikan Dana",
     "systemSettings": "Pengaturan Sistem"
   },
   "TransactionTable": {
@@ -133,8 +134,20 @@
     "simulationDesc": "Pratinjau otomatis berdasarkan nilai yang diatur di atas",
     "saveButton": "Simpan perubahan"
   },
-   "wallet": {
+  "wallet": {
     "title": "Saldo Saya",
     "description":  "Kelola saldo, penarikan, dan riwayat transaksi Anda"
+  },
+  "WithdrawAdmin":{
+    "title": "Manajemen Penarikan",
+    "description": "Kelola dan setujui permintaan penarikan dana"
+  },
+  "WithdrawColumn":{
+    "user": "Nama Pengguna",
+    "role": "Peran",
+    "amount": "Jumlah Penarikan",
+    "status": "Status",
+    "requestedAt": "Tanggal Pengajuan",
+    "actions": "Aksi"
   }
 }
