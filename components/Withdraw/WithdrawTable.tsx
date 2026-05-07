@@ -1,7 +1,7 @@
 "use client";
 
 import { useWithdrawColumns, WithdrawRequest } from "./Columns";
-import { DataTable } from "../Shrared/DataTable/data-table";
+import { DataTable } from "../Shared/DataTable/data-table";
 
 const mockData: WithdrawRequest[] = [
   {

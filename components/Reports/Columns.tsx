@@ -1,4 +1,8 @@
+"use client";
+
+import { formatCurrency } from "@/lib/utils/formatters/currency";
 import { ColumnDef } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 
 export type LaporanRow = {
   id: string;
@@ -10,29 +14,47 @@ export type LaporanRow = {
   operator: number;
 };
 
-export const columns: ColumnDef<LaporanRow>[] = [
-  {
-    header: "Patient",
-    accessorKey: "patient_name",
-  },
-  {
-    header: "Total",
-    accessorKey: "total_amount",
-  },
-  {
-    header: "Corporate",
-    accessorKey: "corporate",
-  },
-  {
-    header: "System",
-    accessorKey: "system",
-  },
-  {
-    header: "Courier",
-    accessorKey: "courier",
-  },
-  {
-    header: "Operator",
-    accessorKey: "operator",
-  },
-];
+export const useReportColumns = (): ColumnDef<LaporanRow>[] => {
+  const t = useTranslations("Reports");
+  return [
+    {
+      header: t("patientName"),
+      accessorKey: "patient_name",
+    },
+    {
+      header: t("totalAmount"),
+      accessorKey: "total_amount",
+      cell: ({ row }) => {
+        return formatCurrency(row.original.total_amount);
+      },
+    },
+    {
+      header: t("corporate"),
+      accessorKey: "corporate",
+      cell: ({ row }) => {
+        return formatCurrency(row.original.corporate);
+      },
+    },
+    {
+      header: t("system"),
+      accessorKey: "system",
+      cell: ({ row }) => {
+        return formatCurrency(row.original.system);
+      },
+    },
+    {
+      header: t("courier"),
+      accessorKey: "courier",
+      cell: ({ row }) => {
+        return formatCurrency(row.original.courier);
+      },
+    },
+    {
+      header: t("operator"),
+      accessorKey: "operator",
+      cell: ({ row }) => {
+        return formatCurrency(row.original.operator);
+      },
+    },
+  ];
+};
