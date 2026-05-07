@@ -44,7 +44,8 @@
     "transaction": "Transaction",
     "userManagement": "User Management",
     "reports": "Reports",
-     "balance": "Balance",
+    "wallet": "Balance",
+    "withdraw": "Withdrawal Management",
     "systemSettings": "System Settings"
   },
   "TransactionTable": {
@@ -131,5 +132,21 @@
     "simulationTitle": "Delivery cost simulation",
     "simulationDesc": "Automatic preview based on the values set above",
     "saveButton": "Save changes"
+  },
+  "wallet": {
+    "title": "My Wallet",
+    "description":  "Manage your balance, withdrawals, and transaction history"
+  },
+  "WithdrawAdmin":{
+    "title": "Withdrawal Management",
+    "description": "Manage and approve withdrawal requests"
+  },
+   "WithdrawColumn":{
+    "user": "User",
+    "role": "Role",
+    "amount": "Withdrawal Amount",
+    "status": "Status",
+    "requestedAt": "Requested At",
+    "actions": "Actions"
   }
 }
