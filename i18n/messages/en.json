@@ -137,6 +137,32 @@
     "title": "My Wallet",
     "description":  "Manage your balance, withdrawals, and transaction history"
   },
+  "walletCards":{
+    "card1": "Current Balance",
+    "card1Subtitle": "Siap ditarik kapan saja",
+    "card2": "Total Income",
+    "card2Subtitle": "order bulan ini",
+    "card3": "Withdrawal Total",
+    "card3Subtitle": "kali penarikan"
+  },
+  "walletWithdrawColumns": {
+    "wdId": "Withdraw ID",
+    "amount": "Amount",
+    "status": "Status",
+    "date": "Date"
+  },
+  "walletWithdrawTable": {
+    "withdrawHeader": "Withdraw History"
+  },
+  "walletTransactionColumns": {
+    "transactionId": "Transaction Code",
+    "type": "Type",
+    "amount": "Total Amount",
+    "date": "Date"
+  },
+  "walletTransactionTable": {
+    "transactionHeader": "Transaction History"
+  },
   "WithdrawAdmin":{
     "title": "Withdrawal Management",
     "description": "Manage and approve withdrawal requests"

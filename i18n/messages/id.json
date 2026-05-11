@@ -137,6 +137,32 @@
     "title": "Saldo Saya",
     "description":  "Kelola saldo, penarikan, dan riwayat transaksi Anda"
   },
+  "walletCards":{
+    "card1": "Saldo saat ini",
+    "card1Subtitle": "Siap ditarik kapan saja",
+    "card2": "Total Pendapatan",
+    "card2Subtitle": "order bulan ini",
+    "card3": "Total Penarikan",
+    "card3Subtitle": "kali penarikan"
+  },
+  "walletWithdrawColumns": {
+    "wdId": "Withdraw ID",
+    "amount": "Jumlah",
+    "status": "Status",
+    "date": "Tanggal"
+  },
+  "walletWithdrawTable": {
+    "withdrawHeader": "Riwayat Penarikan"
+  },
+  "walletTransactionColumns": {
+    "transactionId": "Kode Transaki",
+    "type": "Tipe",
+    "amount": "Jumlah",
+    "date": "Tanggal"
+  },
+  "walletTransactionTable": {
+    "transactionHeader": "Riwayat Transaksi"
+  },
   "WithdrawAdmin":{
     "title": "Manajemen Penarikan",
     "description": "Kelola dan setujui permintaan penarikan dana"

@@ -12,8 +12,8 @@ const Wallet = async () => {
           <WalletHeader />
           <BalanceCard />
           <WithdrawForm />
-          <WithdrawTable />
           <TransactionTable />
+          <WithdrawTable />
         </div>
       </div>
     </div>
