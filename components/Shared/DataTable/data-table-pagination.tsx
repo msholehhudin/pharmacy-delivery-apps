@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -29,17 +30,19 @@ export function DataTablePagination<TData>({
 
   const to = Math.min(from + pageSize - 1, totalData);
 
+  const t = useTranslations("TransactionTable");
+
   return (
     <div className="flex items-center justify-between py-4">
       {/* LEFT */}
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm text-muted-foreground hidden md:flex">
         Showing {from}-{to} of {totalData} results
       </div>
 
       {/* RIGHT */}
       <div className="flex items-center gap-4">
         {/* PAGE SIZE */}
-        <div className="flex items-center gap-2">
+        <div className="md:flex items-center gap-2 hidden">
           <p className="text-sm">Rows per page</p>
 
           <Select
@@ -53,7 +56,7 @@ export function DataTablePagination<TData>({
             </SelectTrigger>
 
             <SelectContent>
-              {[10, 20, 50].map((size) => (
+              {[10, 20, 50, 100].map((size) => (
                 <SelectItem key={size} value={`${size}`}>
                   {size}
                 </SelectItem>
@@ -64,7 +67,7 @@ export function DataTablePagination<TData>({
 
         {/* PAGE INFO */}
         <div className="text-sm">
-          Page {pageIndex + 1} of {table.getPageCount()}
+          {t("footPage")} {pageIndex + 1} {t("footOf")} {table.getPageCount()}
         </div>
 
         {/* BUTTONS */}
@@ -75,7 +78,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            {t("footerPrev")}
           </Button>
 
           <Button
@@ -84,7 +87,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            {t("footerNext")}
           </Button>
         </div>
       </div>
